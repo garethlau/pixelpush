@@ -6,9 +6,11 @@ const PORT = process.env.PORT || 5000;
 const ENVIRONMENT = process.env.ENVIRONMENT;
 
 const app = express();
+require("./mongo");
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+
 app.use(require("./routes"));
 
 app.listen(PORT, () => {

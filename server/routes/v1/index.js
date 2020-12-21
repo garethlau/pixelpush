@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
 
-router.use("/spaces", require("./spaces"));
+router.use("/albums", require("./albums"));
 
 module.exports = router;

@@ -1,6 +1,7 @@
 const express = require("express");
 const path = require("path");
 const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
 
 const PORT = process.env.PORT || 5000;
 const ENVIRONMENT = process.env.ENVIRONMENT;
@@ -10,6 +11,7 @@ require("./mongo");
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(cookieParser());
 
 app.use(require("./routes"));
 

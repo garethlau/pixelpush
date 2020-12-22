@@ -24,10 +24,11 @@ function generateCode() {
 }
 
 router.post("/", auth.enforce, async (req, res) => {
+  const { ID } = req.payload;
   const { title, geo } = req.body;
   try {
     const code = generateCode();
-    const album = await new Album({ code, title, geo }).save();
+    const album = await new Album({ code, title, geo, createdBy: ID }).save();
     return res.status(200).send({ album });
   } catch (error) {
     return res.status(500).send(error);

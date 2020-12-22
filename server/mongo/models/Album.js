@@ -6,6 +6,7 @@ const AlbumSchema = new Schema({
   title: String,
   geo: String,
   photos: Array,
+  createdBy: String,
 });
 
 module.exports = mongoose.model("Album", AlbumSchema);

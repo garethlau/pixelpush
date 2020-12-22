@@ -18,10 +18,10 @@ const cookieOptions =
       };
 
 function sendRefreshToken(res, token) {
-  res.cookie("jid", token, cookieOptions);
+  res.cookie("app_rtoken", token, cookieOptions);
 }
 function clearRefreshToken(res) {
-  res.clearCookie("jid", cookieOptions);
+  res.clearCookie("app_rtoken", cookieOptions);
 }
 
 router.post("/signup", async (req, res) => {

@@ -4,6 +4,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import { useDropzone } from "react-dropzone";
 import { QueryClient } from "react-query";
 
+import { v4 as uuidv4 } from "uuid";
+
 import Typography from "@material-ui/core/Typography";
 
 import useAlbum from "../_queries/useAlbum";
@@ -18,6 +20,7 @@ import UploadQueue from "../_components/UploadQueue";
 
 import { UploadQueueContext } from "../_contexts/uploadQueue";
 import { UploadProgressContext } from "../_contexts/uploadProgress";
+import Photo from "../_components/Photo";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -35,6 +38,12 @@ const useStyles = makeStyles((theme) => ({
     transform: "translate(-50%, -50%)",
   },
 }));
+
+function isValidType(file) {
+  const type = file.type;
+  const validImageTypes = ["image/gif", "image/jpeg", "image/png", "image/jpg"];
+  return validImageTypes.includes(type);
+}
 
 export default function Album() {
   const classes = useStyles();
@@ -67,8 +76,22 @@ export default function Album() {
     }
   }, [uploadQueue]);
 
-  const onDrop = useCallback(async (acceptedFiles) => {
+  const onDrop = useCallback(async (droppedFiles) => {
     // Do something with the files
+
+    const acceptedFiles = droppedFiles.filter(isValidType).map((file) => {
+      // Generate a key for each file
+      const key = uuidv4();
+      file.key = key;
+
+      // Generate dimensions for the image
+      const objectURL = URL.createObjectURL(file);
+
+      return file;
+    });
+
+    console.log(acceptedFiles);
+
     uploadQueue.enqueueMany(acceptedFiles);
   }, []);
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
@@ -82,8 +105,8 @@ export default function Album() {
 
           <div>
             <Typography variant="h1">Photos</Typography>
-            {photos?.map((url, index) => (
-              <img key={index} src={url} style={{ width: "100%" }} />
+            {photos?.map((photo, index) => (
+              <Photo photo={photo} key={index} />
             ))}
           </div>
 

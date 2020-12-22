@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 
 export default function upload(albumCode, file, config = {}) {
   return new Promise((resolve, reject) => {
-    const key = uuidv4();
+    const key = file.key;
     // Get signed url
     axios
       .post("/api/v1/signed-urls", { key })

@@ -8,8 +8,8 @@ export default function usePhotos(albumCode) {
       axios
         .get(`/api/v1/albums/${albumCode}/photos`)
         .then((response) => {
-          const urls = response.data?.urls;
-          resolve(urls);
+          const photos = response.data?.photos;
+          resolve(photos);
         })
         .catch((error) => {
           reject(error);

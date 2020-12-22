@@ -5,7 +5,8 @@ import Button from "../_components/Button";
 import { useHistory } from "react-router-dom";
 import useTextInput from "../_hooks/useTextInput";
 
-import createAlbum from "../_utils/createAlbum";
+import useCreateAlbum from "../_mutations/useCreateAlbum";
+import { useSnackbar } from "notistack";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -32,6 +33,8 @@ export default function Home() {
   const history = useHistory();
 
   const title = useTextInput("");
+  const { mutateAsync: createAlbum } = useCreateAlbum();
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   async function submit() {
     try {
@@ -42,7 +45,26 @@ export default function Home() {
       if (album) {
         history.push(`/albums/${album.code}`);
       }
-    } catch (error) {}
+    } catch (error) {
+      if (error.response) {
+        if (error.response.status === 401) {
+          enqueueSnackbar("Please log in to create an album.", {
+            variant: "error",
+            action: (key) => (
+              <Button
+                onClick={() => {
+                  closeSnackbar(key);
+                  history.push("/login");
+                }}
+                variant="outlined"
+              >
+                Log in
+              </Button>
+            ),
+          });
+        }
+      }
+    }
   }
 
   return (

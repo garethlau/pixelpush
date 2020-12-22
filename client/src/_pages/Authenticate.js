@@ -128,7 +128,6 @@ export default function Authenticate({ isLogin }) {
       <a href="/signup" className={classes.link}>
         Sign up
       </a>
-      Sign up
     </Typography>
   ) : (
     <Typography>
@@ -216,7 +215,7 @@ export default function Authenticate({ isLogin }) {
           >
             {isLogin ? "Log In" : "Sign Up"}
           </Button>
-          <div class={classes.alternativeMobile}>{altAuth}</div>
+          <div className={classes.alternativeMobile}>{altAuth}</div>
         </div>
       </section>
     </div>

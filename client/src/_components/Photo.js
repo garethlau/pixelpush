@@ -6,6 +6,9 @@ import IconButton from "@material-ui/core/IconButton";
 import { useState } from "react";
 import GetAppIcon from "@material-ui/icons/GetApp";
 import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
+import { useInView } from "react-intersection-observer";
+import { motion } from "framer-motion";
+import animPhoto from "../_animations/photo";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -29,9 +32,15 @@ export default function Photo({ photo }) {
   const classes = useStyles();
   const { data: user, isLoading } = useUser();
   const [showActions, setShowActions] = useState(false);
+  const { ref, inView } = useInView({
+    triggerOnce: true,
+  });
 
   return (
-    <div
+    <motion.div
+      ref={ref}
+      {...animPhoto}
+      animate={inView ? "enter" : "initial"}
       className={classes.root}
       onMouseEnter={() => setShowActions(true)}
       onMouseLeave={() => setShowActions(false)}
@@ -58,6 +67,6 @@ export default function Photo({ photo }) {
           )}
         </div>
       )}
-    </div>
+    </motion.div>
   );
 }

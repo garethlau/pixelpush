@@ -38,12 +38,16 @@ function App() {
                   <Route path="/upload" component={Upload} />
                   <Route path="/albums/:albumCode" component={Album} />
                   <Route path="/font" component={Font} />
-                  <Route path="/signup">
-                    <Authenticate isLogin={false} />
-                  </Route>
-                  <Router path="/login">
-                    <Authenticate isLogin={true} />
-                  </Router>
+                  <Route
+                    path="/signup"
+                    render={(routeProps) => <Authenticate {...routeProps} />}
+                  />
+                  <Route
+                    path="/login"
+                    render={(routeProps) => (
+                      <Authenticate {...routeProps} isLogin />
+                    )}
+                  />
                 </Switch>
               </Router>
             </UploadProgressProvider>

@@ -7,7 +7,7 @@ import Button from "../_components/Button";
 import useLogin from "../_mutations/useLogin";
 import useSignup from "../_mutations/useSignup";
 import useTextInput from "../_hooks/useTextInput";
-import { useHistory } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
 import qs from "query-string";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
@@ -125,16 +125,16 @@ export default function Authenticate({ isLogin }) {
   const altAuth = isLogin ? (
     <Typography variant="body1">
       Don't have an account?{" "}
-      <a href="/signup" className={classes.link}>
+      <Link to="/signup" className={classes.link}>
         Sign up
-      </a>
+      </Link>
     </Typography>
   ) : (
     <Typography>
       Already have an account?{" "}
-      <a href="/login" className={classes.link}>
+      <Link to="/login" className={classes.link}>
         Log in
-      </a>
+      </Link>
     </Typography>
   );
 

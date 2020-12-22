@@ -10,6 +10,8 @@ const axios = require("axios");
 const s3 = require("../../s3");
 const keys = require("../../config/keys");
 
+const auth = require("../../middlewares/auth");
+
 function generateCode() {
   let result = "";
   for (let i = 0; i < 3; i++) {
@@ -21,7 +23,7 @@ function generateCode() {
   return result;
 }
 
-router.post("/", async (req, res) => {
+router.post("/", auth.enforce, async (req, res) => {
   const { title, geo } = req.body;
   try {
     const code = generateCode();
@@ -70,9 +72,10 @@ router.get("/:albumCode/photos", async (req, res) => {
   }
 });
 
-router.put("/:albumCode/photos", async (req, res) => {
+router.put("/:albumCode/photos", auth.enforce, async (req, res) => {
   const { albumCode } = req.params;
   const { key } = req.body;
+  const { ID } = req.payload;
 
   const params = {
     Key: key,
@@ -90,7 +93,7 @@ router.put("/:albumCode/photos", async (req, res) => {
 
     const album = await Album.findOne({ code: albumCode }).exec();
     const photos = album.photos;
-    album.photos = [...photos, { key, width, height }];
+    album.photos = [...photos, { key, width, height, userId: ID }];
     const updatedAlbum = await album.save();
     return res.status(200).send({ album: updatedAlbum });
   } catch (error) {

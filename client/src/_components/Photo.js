@@ -7,7 +7,7 @@ import { useState } from "react";
 import GetAppIcon from "@material-ui/icons/GetApp";
 import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 import { useInView } from "react-intersection-observer";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import animPhoto from "../_animations/photo";
 
 const useStyles = makeStyles((theme) => ({
@@ -24,7 +24,6 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.common.white,
     boxShadow: theme.shadows[10],
     borderRadius: "5px",
-    transform: "translateY(-50%)",
   },
 }));
 
@@ -46,27 +45,34 @@ export default function Photo({ photo }) {
       onMouseLeave={() => setShowActions(false)}
     >
       <img className={classes.img} src={photo.url} alt="" />
-      {showActions && (
-        <div className={classes.actions}>
-          <div>
-            <IconButton color="primary" size="large">
-              <InfoOutlinedIcon />
-            </IconButton>
-          </div>
-          <div>
-            <IconButton color="primary" size="large">
-              <GetAppIcon />
-            </IconButton>
-          </div>
-          {!isLoading && photo.userId === user?._id && (
+      <AnimatePresence>
+        {showActions && (
+          <motion.div
+            initial={{ opacity: 0, x: 10, y: "-50%" }}
+            animate={{ opacity: 1, x: 0, y: "-50%" }}
+            exit={{ opacity: 0, x: 10, y: "-50%" }}
+            className={classes.actions}
+          >
             <div>
-              <IconButton color="primary" size="large">
-                <RemoveCircleOutlineIcon />
+              <IconButton color="primary">
+                <InfoOutlinedIcon fontSize="small" />
               </IconButton>
             </div>
-          )}
-        </div>
-      )}
+            <div>
+              <IconButton color="primary">
+                <GetAppIcon fontSize="large" />
+              </IconButton>
+            </div>
+            {!isLoading && photo.userId === user?._id && (
+              <div>
+                <IconButton color="primary">
+                  <RemoveCircleOutlineIcon />
+                </IconButton>
+              </div>
+            )}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 }

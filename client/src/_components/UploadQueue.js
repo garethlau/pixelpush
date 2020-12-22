@@ -15,6 +15,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "#ffffff42",
     backdropFilter: "blur(10px) brightness(0.7)",
     boxShadow: theme.shadows[7],
+    zIndex: 5,
   },
   header: {
     position: "relative",

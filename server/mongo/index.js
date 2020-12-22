@@ -11,3 +11,4 @@ mongoose
   });
 
 require("./models/Album");
+require("./models/User");

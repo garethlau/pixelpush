@@ -3,7 +3,9 @@ const router = express.Router();
 const s3 = require("../../s3");
 const keys = require("../../config/keys");
 
-router.post("/", async (req, res) => {
+const auth = require("../../middlewares/auth");
+
+router.post("/", auth.enforce, async (req, res) => {
   const { key } = req.body;
   const params = {
     Key: key,

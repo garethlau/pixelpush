@@ -7,6 +7,7 @@ import { SnackbarProvider } from "notistack";
 import theme from "./theme";
 import { UploadQueueProvider } from "./_contexts/uploadQueue";
 import { UploadProgressProvider } from "./_contexts/uploadProgress";
+import { PhotoDetailsProvider } from "./_contexts/photoDetails";
 
 import Home from "./_pages/Home";
 import Upload from "./_pages/Upload";
@@ -30,28 +31,30 @@ function App() {
       <CssBaseline />
       <SnackbarProvider {...snackbarConfig}>
         <QueryClientProvider client={queryClient}>
-          <UploadQueueProvider>
-            <UploadProgressProvider>
-              <Router>
-                <Switch>
-                  <Route path="/" exact component={Home} />
-                  <Route path="/upload" component={Upload} />
-                  <Route path="/albums/:albumCode" component={Album} />
-                  <Route path="/font" component={Font} />
-                  <Route
-                    path="/signup"
-                    render={(routeProps) => <Authenticate {...routeProps} />}
-                  />
-                  <Route
-                    path="/login"
-                    render={(routeProps) => (
-                      <Authenticate {...routeProps} isLogin />
-                    )}
-                  />
-                </Switch>
-              </Router>
-            </UploadProgressProvider>
-          </UploadQueueProvider>
+          <PhotoDetailsProvider>
+            <UploadQueueProvider>
+              <UploadProgressProvider>
+                <Router>
+                  <Switch>
+                    <Route path="/" exact component={Home} />
+                    <Route path="/upload" component={Upload} />
+                    <Route path="/albums/:albumCode" component={Album} />
+                    <Route path="/font" component={Font} />
+                    <Route
+                      path="/signup"
+                      render={(routeProps) => <Authenticate {...routeProps} />}
+                    />
+                    <Route
+                      path="/login"
+                      render={(routeProps) => (
+                        <Authenticate {...routeProps} isLogin />
+                      )}
+                    />
+                  </Switch>
+                </Router>
+              </UploadProgressProvider>
+            </UploadQueueProvider>
+          </PhotoDetailsProvider>
         </QueryClientProvider>
       </SnackbarProvider>
     </ThemeProvider>

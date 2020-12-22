@@ -22,6 +22,7 @@ import { UploadQueueContext } from "../_contexts/uploadQueue";
 import { UploadProgressContext } from "../_contexts/uploadProgress";
 import Photo from "../_components/Photo";
 import useUser from "../_queries/useUser";
+import PhotoDetails from "../_components/PhotoDetails";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -101,6 +102,7 @@ export default function Album() {
   return (
     <React.Fragment>
       <UploadQueue />
+      <PhotoDetails />
       <div className={classes.root}>
         <div className={classes.content}>
           {albumCode}

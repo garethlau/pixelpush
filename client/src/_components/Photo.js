@@ -1,14 +1,15 @@
+import { useState, useContext } from "react";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import useUser from "../_queries/useUser";
 import RemoveCircleOutlineIcon from "@material-ui/icons/RemoveCircleOutline";
 import IconButton from "@material-ui/core/IconButton";
-import { useState } from "react";
 import GetAppIcon from "@material-ui/icons/GetApp";
 import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 import { useInView } from "react-intersection-observer";
 import { motion, AnimatePresence } from "framer-motion";
 import animPhoto from "../_animations/photo";
+import { PhotoDetailsContext } from "../_contexts/photoDetails";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -31,9 +32,14 @@ export default function Photo({ photo }) {
   const classes = useStyles();
   const { data: user, isLoading } = useUser();
   const [showActions, setShowActions] = useState(false);
+  const { open } = useContext(PhotoDetailsContext);
   const { ref, inView } = useInView({
     triggerOnce: true,
   });
+
+  function openDetails() {
+    open(photo);
+  }
 
   return (
     <motion.div
@@ -54,13 +60,13 @@ export default function Photo({ photo }) {
             className={classes.actions}
           >
             <div>
-              <IconButton color="primary">
-                <InfoOutlinedIcon fontSize="small" />
+              <IconButton color="primary" onClick={openDetails}>
+                <InfoOutlinedIcon />
               </IconButton>
             </div>
             <div>
               <IconButton color="primary">
-                <GetAppIcon fontSize="large" />
+                <GetAppIcon />
               </IconButton>
             </div>
             {!isLoading && photo.userId === user?._id && (

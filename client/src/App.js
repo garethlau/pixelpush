@@ -11,6 +11,7 @@ import Home from "./_pages/Home";
 import Upload from "./_pages/Upload";
 import Font from "./_pages/Font";
 import Album from "./_pages/Album";
+import Authenticate from "./_pages/Authenticate";
 
 function App() {
   const queryClient = new QueryClient();
@@ -26,6 +27,12 @@ function App() {
                 <Route path="/upload" component={Upload} />
                 <Route path="/albums/:albumCode" component={Album} />
                 <Route path="/font" component={Font} />
+                <Route path="/signup">
+                  <Authenticate isLogin={false} />
+                </Route>
+                <Router path="/login">
+                  <Authenticate isLogin={true} />
+                </Router>
               </Switch>
             </Router>
           </UploadProgressProvider>

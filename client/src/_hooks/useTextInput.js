@@ -6,8 +6,13 @@ export default function useTextInput(initialValue) {
     setValue(e.target.value);
   }
 
+  function reset() {
+    setValue(initialValue);
+  }
+
   return {
     onChange,
     value,
+    reset,
   };
 }

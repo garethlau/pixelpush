@@ -11,6 +11,11 @@ axios.defaults.withCredentials = true;
 // Executes on every request
 axios.interceptors.request.use(
   async function (config) {
+    // Don't attach access token to requests to aws
+    if (config.url && config.url.includes("amazonaws.com")) {
+      config.withCredentials = false;
+      return config;
+    }
     // Do something before request is sent
     let accessToken = getAccessToken();
     config.headers["authorization"] = `Bearer ${accessToken}`;
@@ -29,6 +34,10 @@ axios.interceptors.response.use(
   },
   function (error) {
     const originalRequest = error.config;
+
+    if (!error.response) {
+      return Promise.reject(error);
+    }
 
     if (
       error.response.status === 401 &&

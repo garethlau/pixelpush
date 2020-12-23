@@ -54,7 +54,10 @@ export default function Home() {
   const history = useHistory();
 
   const title = useTextInput("");
-  const { mutateAsync: createAlbum } = useCreateAlbum();
+  const {
+    mutateAsync: createAlbum,
+    isLoading: creatingAlbum,
+  } = useCreateAlbum();
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const [selectedDate, setSelectedDate] = useState(new Date());
 
@@ -64,6 +67,10 @@ export default function Home() {
   };
 
   async function submit() {
+    if (title.value === "") {
+      enqueueSnackbar("Please enter an event name.", { variant: "error" });
+      return;
+    }
     try {
       const data = {
         title: title.value,
@@ -135,6 +142,7 @@ export default function Home() {
               variant="contained"
               color="primary"
               onClick={submit}
+              isLoading={creatingAlbum}
             >
               Create Album
             </Button>

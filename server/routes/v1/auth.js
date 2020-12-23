@@ -33,7 +33,9 @@ router.post("/signup", async (req, res) => {
   }
   try {
     // Check if the user already exists or if the email is in use
-    const existingUser = await User.findOne({ email }).exec();
+    const existingUser = await User.findOne({
+      email: { $regex: new RegExp(email, "i") },
+    }).exec();
     if (existingUser) {
       return res.status(409).send({ message: "Email is already in use." });
     }
@@ -69,8 +71,11 @@ router.post("/signup", async (req, res) => {
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
   // Step 1 - Check if the username exists
+
   try {
-    const user = await User.findOne({ email }).exec();
+    const user = await User.findOne({
+      email: { $regex: new RegExp(email, "i") },
+    }).exec();
     if (!user) {
       return res.status(404).send({ message: "User does not exist." });
     }

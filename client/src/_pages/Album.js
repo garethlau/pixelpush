@@ -134,7 +134,7 @@ export default function Album() {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
   return (
-    <React.Fragment>
+    <div style={{ overflowX: "hidden" }}>
       <UploadQueue />
       <PhotoDetails />
       <div className={classes.root}>
@@ -245,6 +245,6 @@ export default function Album() {
           </motion.div>
         </div>
       </div>
-    </React.Fragment>
+    </div>
   );
 }

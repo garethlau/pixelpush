@@ -81,6 +81,47 @@ router.get("/:albumCode/photos", async (req, res) => {
   }
 });
 
+router.delete("/:albumCode", auth.enforce, async (req, res) => {
+  const { albumCode } = req.params;
+  const { ID } = req.payload;
+
+  try {
+    // Check if this user is permitted to delete the album
+    const album = await Album.findOne({ code: albumCode }).exec();
+
+    if (!album) {
+      return res.status(404).send({ message: "Album not found." });
+    }
+
+    if (album.createdBy !== ID) {
+      return res
+        .status(403)
+        .send({ message: "You do not have permissions to delete this album." });
+    }
+
+    // Remove photos from s3
+    const params = {
+      Bucket: keys.S3_BUCKET_NAME,
+      Delete: {
+        Quiet: false,
+        Objects: album.photos.map((photo) => {
+          return {
+            Key: photo.key,
+          };
+        }),
+      },
+    };
+    await s3.deleteObjects(params).promise();
+
+    // Delete the album from mongo
+    await album.delete();
+
+    return res.status(200).send({ message: "Album deleted." });
+  } catch (error) {
+    return res.status(500).send(error);
+  }
+});
+
 router.put("/:albumCode/photos", auth.enforce, async (req, res) => {
   const { albumCode } = req.params;
   const { key, type, name, size } = req.body;

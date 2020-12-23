@@ -15,8 +15,14 @@ export default function upload(albumCode, file, config = {}) {
           .then((response) => {
             console.log(response);
             // Attach file object to album
+            const { type, name, size } = file;
             axios
-              .put(`/api/v1/albums/${albumCode}/photos`, { key })
+              .put(`/api/v1/albums/${albumCode}/photos`, {
+                key,
+                type,
+                name,
+                size,
+              })
               .then((response) => {
                 console.log(response);
                 resolve(response);

@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const AlbumSchema = new Schema({
   code: String,
   title: String,
-  geo: String,
+  date: String,
   photos: Array,
   createdBy: String,
 });

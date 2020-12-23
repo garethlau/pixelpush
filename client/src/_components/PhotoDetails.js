@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: theme.shadows[10],
     outline: "none",
     border: "none",
-    borderRadius: "10px",
+    borderRadius: "5px",
     padding: "20px",
   },
 }));

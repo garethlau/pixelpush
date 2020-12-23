@@ -4,6 +4,7 @@ import { UploadQueueContext } from "../_contexts/uploadQueue";
 import { UploadProgressContext } from "../_contexts/uploadProgress";
 import Typography from "@material-ui/core/Typography";
 import LinearProgress from "./LinearProgress";
+import { formatFileSize } from "../_utils/formatter";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -63,8 +64,12 @@ export default function UploadQueue() {
           />
           {uploadQueue.values.map((file, index) => (
             <div key={index} className={classes.fileCard}>
-              <Typography variant="body1">{file.name}</Typography>
-              <Typography variant="caption">{file.size}</Typography>
+              <Typography noWrap variant="body1">
+                {file.name}
+              </Typography>
+              <Typography noWrap variant="caption">
+                {formatFileSize(file.size)}
+              </Typography>
             </div>
           ))}
         </div>

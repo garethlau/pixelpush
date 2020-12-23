@@ -1,9 +1,9 @@
-import { useMutation, QueryClient } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import axios from "axios";
 import { setAccessToken } from "../accessToken";
 
 export default function useSignup() {
-  const queryClient = new QueryClient();
+  const queryClient = useQueryClient();
 
   function mutate({ email, password, firstName, lastName }) {
     const data = {

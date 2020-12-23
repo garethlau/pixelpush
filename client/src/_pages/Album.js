@@ -23,6 +23,7 @@ import { UploadProgressContext } from "../_contexts/uploadProgress";
 import Photo from "../_components/Photo";
 import useUser from "../_queries/useUser";
 import PhotoDetails from "../_components/PhotoDetails";
+import Skeleton from "@material-ui/lab/Skeleton";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -105,7 +106,15 @@ export default function Album() {
       <PhotoDetails />
       <div className={classes.root}>
         <div className={classes.content}>
-          {albumCode}
+          <div>
+            <Typography variant="caption">{albumCode}</Typography>
+            <Typography variant="h1">
+              {album ? album.title : <Skeleton />}
+            </Typography>
+            <Typography variant="h3">
+              {album ? new Date(album.date).toUTCString() : <Skeleton />}
+            </Typography>
+          </div>
 
           <div>
             <Typography variant="h1">Photos</Typography>

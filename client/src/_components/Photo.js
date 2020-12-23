@@ -13,6 +13,7 @@ import { PhotoDetailsContext } from "../_contexts/photoDetails";
 import useRemovePhoto from "../_mutations/useRemovePhoto";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import Skeleton from "@material-ui/lab/Skeleton";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -21,6 +22,9 @@ const useStyles = makeStyles((theme) => ({
   img: {
     width: "100%",
   },
+  imgLoading: {
+    height: 0,
+  },
   actions: {
     position: "absolute",
     right: "10px",
@@ -28,6 +32,19 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.common.white,
     boxShadow: theme.shadows[10],
     borderRadius: "5px",
+  },
+  skeletonContainer: {
+    paddingTop: "56.25%",
+    position: "relative",
+    height: 0,
+    overflow: "hidden",
+  },
+  skeleton: {
+    height: "100%",
+    width: "100%",
+    position: "absolute",
+    top: 0,
+    left: 0,
   },
 }));
 
@@ -45,6 +62,7 @@ export default function Photo({ photo }) {
   const [showActions, setShowActions] = useState(false);
   const { open } = useContext(PhotoDetailsContext);
   const { albumCode } = useParams();
+  const [loaded, setLoaded] = useState(false);
 
   const { mutateAsync: removePhoto } = useRemovePhoto(albumCode);
 
@@ -103,17 +121,37 @@ export default function Photo({ photo }) {
   }
 
   return (
-    <motion.div
-      ref={ref}
-      {...animPhoto}
-      animate={inView ? "enter" : "initial"}
+    <div
       className={classes.root}
       onMouseEnter={() => setShowActions(true)}
       onMouseLeave={() => setShowActions(false)}
     >
-      <img className={classes.img} src={photo.url} alt="" />
       <AnimatePresence>
-        {showActions && (
+        {!loaded && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className={classes.skeletonContainer}
+            key={"loader"}
+          >
+            <Skeleton variant="rect" className={classes.skeleton} />
+          </motion.div>
+        )}
+
+        <motion.img
+          key={"image"}
+          className={loaded ? classes.img : classes.imgLoading}
+          src={photo.url}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          alt=""
+          onLoad={() => setLoaded(true)}
+        />
+      </AnimatePresence>
+      <AnimatePresence>
+        {loaded && showActions && (
           <motion.div
             initial={{ opacity: 0, x: 10, y: "-50%" }}
             animate={{ opacity: 1, x: 0, y: "-50%" }}
@@ -140,6 +178,6 @@ export default function Photo({ photo }) {
           </motion.div>
         )}
       </AnimatePresence>
-    </motion.div>
+    </div>
   );
 }

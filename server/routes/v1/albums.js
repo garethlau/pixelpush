@@ -99,25 +99,28 @@ router.delete("/:albumCode", auth.enforce, async (req, res) => {
         .send({ message: "You do not have permissions to delete this album." });
     }
 
-    // Remove photos from s3
-    const params = {
-      Bucket: keys.S3_BUCKET_NAME,
-      Delete: {
-        Quiet: false,
-        Objects: album.photos.map((photo) => {
-          return {
-            Key: photo.key,
-          };
-        }),
-      },
-    };
-    await s3.deleteObjects(params).promise();
+    if (album.photos.length > 0) {
+      // Remove photos from s3
+      const params = {
+        Bucket: keys.S3_BUCKET_NAME,
+        Delete: {
+          Quiet: false,
+          Objects: album.photos.map((photo) => {
+            return {
+              Key: photo.key,
+            };
+          }),
+        },
+      };
+      await s3.deleteObjects(params).promise();
+    }
 
     // Delete the album from mongo
     await album.delete();
 
     return res.status(200).send({ message: "Album deleted." });
   } catch (error) {
+    console.log(error);
     return res.status(500).send(error);
   }
 });

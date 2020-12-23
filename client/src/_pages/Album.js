@@ -151,9 +151,9 @@ export default function Album() {
                 <Skeleton width={500} />
               )}
             </Typography>
-            {creator && user ? (
+            {creator ? (
               <React.Fragment>
-                {album.createdBy === user._id ? (
+                {album.createdBy === user?._id ? (
                   <div>
                     <Typography variant="h5">
                       You created this album on{" "}

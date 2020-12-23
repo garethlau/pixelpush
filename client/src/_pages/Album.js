@@ -25,6 +25,7 @@ import useAuthedUser from "../_queries/useAuthedUser";
 import PhotoDetails from "../_components/PhotoDetails";
 import Skeleton from "@material-ui/lab/Skeleton";
 import useUser from "../_queries/useUser";
+import useDeleteAlbum from "../_mutations/useDeleteAlbum";
 
 import { useSnackbar } from "notistack";
 
@@ -70,6 +71,9 @@ export default function Album() {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const history = useHistory();
   const location = useLocation();
+  const { mutateAsync: _deleteAlbum, isLoading: isDeleting } = useDeleteAlbum(
+    albumCode
+  );
 
   useEffect(() => {
     console.log(album);
@@ -90,6 +94,23 @@ export default function Album() {
       uploadQueue.dequeue();
     }
   }, [uploadQueue]);
+
+  async function deleteAlbum() {
+    try {
+      await _deleteAlbum();
+      enqueueSnackbar("Album deleted. Redirecting you to the home page.", {
+        variant: "success",
+      });
+      setTimeout(() => {
+        closeSnackbar();
+        history.push("/");
+      }, 3000);
+    } catch (error) {
+      enqueueSnackbar("There was an error. Please try again.", {
+        variant: "error",
+      });
+    }
+  }
 
   const onDrop = useCallback(async (droppedFiles) => {
     // Do something with the files
@@ -129,18 +150,39 @@ export default function Album() {
                 <Skeleton width={500} />
               )}
             </Typography>
-            <Typography variant="h5">
-              {creator ? (
-                "Created by " +
-                creator?.firstName +
-                " " +
-                creator?.lastName +
-                " on " +
-                new Date(album.createdAt).toLocaleDateString()
-              ) : (
+            {creator && user ? (
+              <React.Fragment>
+                {album.createdBy === user._id ? (
+                  <div>
+                    <Typography variant="h5">
+                      You created this album on{" "}
+                      {new Date(album.createdAt).toLocaleDateString()}
+                    </Typography>
+                    <Button
+                      onClick={deleteAlbum}
+                      variant="contained"
+                      color="secondary"
+                      isLoading={isDeleting}
+                    >
+                      Delete
+                    </Button>
+                  </div>
+                ) : (
+                  <Typography variant="h5">
+                    {"Created by " +
+                      creator?.firstName +
+                      " " +
+                      creator?.lastName +
+                      " on " +
+                      new Date(album.createdAt).toLocaleDateString()}
+                  </Typography>
+                )}
+              </React.Fragment>
+            ) : (
+              <Typography variant="h5">
                 <Skeleton width={300} />
-              )}
-            </Typography>
+              </Typography>
+            )}
           </div>
 
           <div>

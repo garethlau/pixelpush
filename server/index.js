@@ -4,7 +4,7 @@ const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 
 const PORT = process.env.PORT || 5000;
-const ENVIRONMENT = process.env.ENVIRONMENT;
+const NODE_ENV = process.env.NODE_ENV;
 
 const app = express();
 require("./mongo");
@@ -16,7 +16,8 @@ app.use(cookieParser());
 app.use(require("./routes"));
 
 app.listen(PORT, () => {
-  if (ENVIRONMENT === "production") {
+  if (NODE_ENV === "production") {
+    console.log("RUNNING IN PRODUCTION ENV");
     app.use(express.static(path.join(__dirname, "..", "client", "build")));
     app.get("/*", function (req, res) {
       res.sendFile(path.join(__dirname, "..", "client", "build", "index.html"));

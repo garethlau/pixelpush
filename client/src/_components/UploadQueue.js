@@ -5,6 +5,7 @@ import { UploadProgressContext } from "../_contexts/uploadProgress";
 import Typography from "@material-ui/core/Typography";
 import LinearProgress from "./LinearProgress";
 import { formatFileSize } from "../_utils/formatter";
+import { AnimatePresence, motion } from "framer-motion";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -48,32 +49,39 @@ export default function UploadQueue() {
   const { uploadQueue } = useContext(UploadQueueContext);
   const { progress } = useContext(UploadProgressContext);
 
-  if (uploadQueue.size() > 0) {
-    return (
-      <div className={classes.root}>
-        <div className={classes.header}>
-          <Typography variant="h3">
-            Queued Uploads ({uploadQueue.size()})
-          </Typography>
-        </div>
-        <div className={classes.cardContainer}>
-          <LinearProgress
-            className={classes.progress}
-            variant="determinate"
-            value={(progress * 100).toFixed(0)}
-          />
-          {uploadQueue.values.map((file, index) => (
-            <div key={index} className={classes.fileCard}>
-              <Typography noWrap variant="body1">
-                {file.name}
-              </Typography>
-              <Typography noWrap variant="caption">
-                {formatFileSize(file.size)}
-              </Typography>
-            </div>
-          ))}
-        </div>
-      </div>
-    );
-  } else return null;
+  return (
+    <AnimatePresence>
+      {uploadQueue.size() > 0 && (
+        <motion.div
+          className={classes.root}
+          initial={{ y: 300 }}
+          animate={{ y: 0 }}
+          exit={{ y: 100 }}
+        >
+          <div className={classes.header}>
+            <Typography variant="h3">
+              Queued Uploads ({uploadQueue.size()})
+            </Typography>
+          </div>
+          <div className={classes.cardContainer}>
+            <LinearProgress
+              className={classes.progress}
+              variant="determinate"
+              value={(progress * 100).toFixed(0)}
+            />
+            {uploadQueue.values.map((file, index) => (
+              <div key={index} className={classes.fileCard}>
+                <Typography noWrap variant="body1">
+                  {file.name}
+                </Typography>
+                <Typography noWrap variant="caption">
+                  {formatFileSize(file.size)}
+                </Typography>
+              </div>
+            ))}
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
 }

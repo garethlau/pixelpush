@@ -34,10 +34,12 @@ const useStyles = makeStyles((theme) => ({
   root: {
     width: "100vw",
     height: "100vh",
+    overflowX: "hidden",
   },
   content: {
     maxWidth: "960px",
     margin: "auto",
+    marginBottom: "150px",
   },
   info: {
     margin: "30px 0",
@@ -134,7 +136,7 @@ export default function Album() {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
   return (
-    <div style={{ overflowX: "hidden" }}>
+    <React.Fragment>
       <UploadQueue />
       <PhotoDetails />
       <div className={classes.root}>
@@ -245,6 +247,6 @@ export default function Album() {
           </motion.div>
         </div>
       </div>
-    </div>
+    </React.Fragment>
   );
 }

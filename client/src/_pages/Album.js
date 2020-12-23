@@ -26,6 +26,7 @@ import PhotoDetails from "../_components/PhotoDetails";
 import Skeleton from "@material-ui/lab/Skeleton";
 import useUser from "../_queries/useUser";
 import useDeleteAlbum from "../_mutations/useDeleteAlbum";
+import { AnimatePresence } from "framer-motion";
 
 import { useSnackbar } from "notistack";
 
@@ -193,11 +194,11 @@ export default function Album() {
                 </Typography>
               </div>
             ) : (
-              <React.Fragment>
+              <AnimatePresence>
                 {photos?.map((photo) => (
                   <Photo photo={photo} key={photo.key} />
                 ))}
-              </React.Fragment>
+              </AnimatePresence>
             )}
           </div>
 

@@ -21,6 +21,9 @@ const useStyles = makeStyles((theme) => ({
   },
   img: {
     width: "100%",
+    boxShadow: theme.shadows[5],
+    margin: "20px 0",
+    borderRadius: "3px",
   },
   imgLoading: {
     height: 0,
@@ -121,7 +124,8 @@ export default function Photo({ photo }) {
   }
 
   return (
-    <div
+    <motion.div
+      exit={{ opacity: 0, scale: 0.7 }}
       className={classes.root}
       onMouseEnter={() => setShowActions(true)}
       onMouseLeave={() => setShowActions(false)}
@@ -178,6 +182,6 @@ export default function Photo({ photo }) {
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+    </motion.div>
   );
 }

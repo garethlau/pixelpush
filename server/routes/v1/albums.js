@@ -94,11 +94,54 @@ router.put("/:albumCode/photos", auth.enforce, async (req, res) => {
 
     const album = await Album.findOne({ code: albumCode }).exec();
     const photos = album.photos;
-    album.photos = [...photos, { key, width, height, userId: ID }];
+    album.photos = [...photos, { key, width, height, uploadedBy: ID }];
     const updatedAlbum = await album.save();
     return res.status(200).send({ album: updatedAlbum });
   } catch (error) {
     return res.status(500).send(error);
   }
 });
+
+router.delete("/:albumCode/photos/:key", auth.enforce, async (req, res) => {
+  const { ID } = req.payload;
+  const { albumCode, key } = req.params;
+  try {
+    const album = await Album.findOne({ code: albumCode }).exec();
+
+    // Check if this user is permitted to remove this photo
+    let permitted = false;
+    if (album.createdBy === ID) {
+      permitted = true;
+    }
+
+    const photoToDelete = album.photos.find((photo) => photo.key === key);
+    if (photoToDelete.uploadedBy === ID) {
+      permitted = true;
+    }
+
+    if (!permitted) {
+      return res.status(403).send({
+        message: "You do not have permission to modify this resource.",
+      });
+    }
+
+    // Remove the object from S3
+    const params = {
+      Bucket: keys.S3_BUCKET_NAME,
+      Key: key,
+    };
+    await s3.deleteObject(params).promise();
+
+    // Remove the photo from the album
+    album.photos = album.photos.filter((photo) => photo.key !== key);
+
+    // Save the new album
+    const updatedAlbum = await album.save();
+
+    return res.status(200).send({ album: updatedAlbum });
+  } catch (error) {
+    return res.status(500).send(error);
+  }
+});
+
 module.exports = router;

@@ -26,7 +26,7 @@ import PhotoDetails from "../_components/PhotoDetails";
 import Skeleton from "@material-ui/lab/Skeleton";
 import useUser from "../_queries/useUser";
 import useDeleteAlbum from "../_mutations/useDeleteAlbum";
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 
 import { useSnackbar } from "notistack";
 
@@ -202,45 +202,47 @@ export default function Album() {
             )}
           </div>
 
-          {!!user ? (
-            <div className={classes.uploadBtn} {...getRootProps()}>
-              <input {...getInputProps()} />
-              <Button
-                variant="contained"
-                color="primary"
-                isLoading={uploadQueue.size() > 0}
-              >
-                Upload
-              </Button>
-            </div>
-          ) : (
-            <div className={classes.uploadBtn}>
-              <Button
-                onClick={() => {
-                  enqueueSnackbar("Please log in to add images.", {
-                    variant: "default",
-                    action: (key) => (
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={() => {
-                          closeSnackbar(key);
-                          let pathname = location.pathname;
-                          history.push("/login?redirect=" + pathname);
-                        }}
-                      >
-                        Log in
-                      </Button>
-                    ),
-                  });
-                }}
-                variant="contained"
-                color="primary"
-              >
-                Upload
-              </Button>
-            </div>
-          )}
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+            {!!user ? (
+              <div className={classes.uploadBtn} {...getRootProps()}>
+                <input {...getInputProps()} />
+                <Button
+                  variant="contained"
+                  color="primary"
+                  isLoading={uploadQueue.size() > 0}
+                >
+                  Upload
+                </Button>
+              </div>
+            ) : (
+              <div className={classes.uploadBtn}>
+                <Button
+                  onClick={() => {
+                    enqueueSnackbar("Please log in to add images.", {
+                      variant: "default",
+                      action: (key) => (
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          onClick={() => {
+                            closeSnackbar(key);
+                            let pathname = location.pathname;
+                            history.push("/login?redirect=" + pathname);
+                          }}
+                        >
+                          Log in
+                        </Button>
+                      ),
+                    });
+                  }}
+                  variant="contained"
+                  color="primary"
+                >
+                  Upload
+                </Button>
+              </div>
+            )}
+          </motion.div>
         </div>
       </div>
     </React.Fragment>

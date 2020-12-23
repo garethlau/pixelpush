@@ -75,7 +75,7 @@ router.get("/:albumCode/photos", async (req, res) => {
 
 router.put("/:albumCode/photos", auth.enforce, async (req, res) => {
   const { albumCode } = req.params;
-  const { key } = req.body;
+  const { key, type, name, size } = req.body;
   const { ID } = req.payload;
 
   const params = {
@@ -94,7 +94,10 @@ router.put("/:albumCode/photos", auth.enforce, async (req, res) => {
 
     const album = await Album.findOne({ code: albumCode }).exec();
     const photos = album.photos;
-    album.photos = [...photos, { key, width, height, uploadedBy: ID }];
+
+    let newPhoto = { key, width, height, uploadedBy: ID, size, type, name };
+
+    album.photos = [...photos, newPhoto];
     const updatedAlbum = await album.save();
     return res.status(200).send({ album: updatedAlbum });
   } catch (error) {

@@ -5,6 +5,7 @@ const User = mongoose.model("User");
 const jwt = require("jsonwebtoken");
 const keys = require("../../config/keys");
 const bcryptjs = require("bcryptjs");
+const { sanitizeUser } = require("../../utils/sanitize");
 
 const cookieOptions =
   process.env.NODE_ENV === "production"
@@ -56,7 +57,9 @@ router.post("/signup", async (req, res) => {
     sendRefreshToken(res, refreshToken);
 
     // Step 5 - Send the access token (and user)
-    return res.status(201).send({ user, accessToken });
+
+    const sanitizedUser = sanitizeUser(user);
+    return res.status(201).send({ user: sanitizedUser, accessToken });
   } catch (err) {
     console.log(err.message);
     return res.status(500).send(err);
@@ -65,7 +68,6 @@ router.post("/signup", async (req, res) => {
 
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
-  console.log(req.body);
   // Step 1 - Check if the username exists
   try {
     const user = await User.findOne({ email }).exec();
@@ -89,7 +91,9 @@ router.post("/login", async (req, res) => {
     sendRefreshToken(res, refreshToken);
 
     // Step 6 - Send access token
-    return res.send({ user, accessToken });
+
+    const sanitizedUser = sanitizeUser(user);
+    return res.send({ user: sanitizedUser, accessToken });
   } catch (err) {
     console.log(err.message);
     return res.status(500).send({ err: err.message });

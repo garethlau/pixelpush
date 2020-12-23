@@ -77,14 +77,15 @@ export default function Home() {
       if (error.response) {
         if (error.response.status === 401) {
           enqueueSnackbar("Please log in to create an album.", {
-            variant: "error",
+            variant: "default",
             action: (key) => (
               <Button
                 onClick={() => {
                   closeSnackbar(key);
                   history.push("/login");
                 }}
-                variant="outlined"
+                variant="contained"
+                color="primary"
               >
                 Log in
               </Button>

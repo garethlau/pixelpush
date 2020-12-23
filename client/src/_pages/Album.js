@@ -1,5 +1,5 @@
 import React, { useEffect, useCallback, useContext } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useHistory, useLocation } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import { useDropzone } from "react-dropzone";
 import { QueryClient } from "react-query";
@@ -26,6 +26,8 @@ import PhotoDetails from "../_components/PhotoDetails";
 import Skeleton from "@material-ui/lab/Skeleton";
 import useUser from "../_queries/useUser";
 
+import { useSnackbar } from "notistack";
+
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100vw",
@@ -44,6 +46,7 @@ const useStyles = makeStyles((theme) => ({
     left: "50%",
     transform: "translate(-50%, -50%)",
   },
+  empty: {},
 }));
 
 function isValidType(file) {
@@ -64,6 +67,9 @@ export default function Album() {
   const { data: user } = useAuthedUser();
   const { data: creator } = useUser(album?.createdBy);
   const queryClient = new QueryClient();
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const history = useHistory();
+  const location = useLocation();
 
   useEffect(() => {
     console.log(album);
@@ -138,15 +144,52 @@ export default function Album() {
           </div>
 
           <div>
-            {photos?.map((photo, index) => (
-              <Photo photo={photo} key={index} />
-            ))}
+            {photos?.length === 0 ? (
+              <div className={classes.empty}>
+                <Typography variant="body1">
+                  This album does not have any photos yet.
+                </Typography>
+              </div>
+            ) : (
+              <React.Fragment>
+                {photos?.map((photo) => (
+                  <Photo photo={photo} key={photo.key} />
+                ))}
+              </React.Fragment>
+            )}
           </div>
 
-          {!!user && (
+          {!!user ? (
             <div className={classes.uploadBtn} {...getRootProps()}>
               <input {...getInputProps()} />
               <Button variant="contained" color="primary">
+                Upload
+              </Button>
+            </div>
+          ) : (
+            <div className={classes.uploadBtn}>
+              <Button
+                onClick={() => {
+                  enqueueSnackbar("Please log in to add images.", {
+                    variant: "default",
+                    action: (key) => (
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() => {
+                          closeSnackbar(key);
+                          let pathname = location.pathname;
+                          history.push("/login?redirect=" + pathname);
+                        }}
+                      >
+                        Log in
+                      </Button>
+                    ),
+                  });
+                }}
+                variant="contained"
+                color="primary"
+              >
                 Upload
               </Button>
             </div>

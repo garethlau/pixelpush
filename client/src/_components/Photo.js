@@ -10,6 +10,8 @@ import { useInView } from "react-intersection-observer";
 import { motion, AnimatePresence } from "framer-motion";
 import animPhoto from "../_animations/photo";
 import { PhotoDetailsContext } from "../_contexts/photoDetails";
+import useRemovePhoto from "../_mutations/useRemovePhoto";
+import { useParams } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -33,12 +35,24 @@ export default function Photo({ photo }) {
   const { data: user, isLoading } = useUser();
   const [showActions, setShowActions] = useState(false);
   const { open } = useContext(PhotoDetailsContext);
+  const { albumCode } = useParams();
+
+  const { mutateAsync: removePhoto } = useRemovePhoto(albumCode);
+
   const { ref, inView } = useInView({
     triggerOnce: true,
   });
 
   function openDetails() {
     open(photo);
+  }
+
+  async function remove() {
+    try {
+      await removePhoto(photo.key);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   return (
@@ -69,9 +83,9 @@ export default function Photo({ photo }) {
                 <GetAppIcon />
               </IconButton>
             </div>
-            {!isLoading && photo.userId === user?._id && (
+            {!isLoading && photo.uploadedBy === user?._id && (
               <div>
-                <IconButton color="primary">
+                <IconButton color="primary" onClick={remove}>
                   <RemoveCircleOutlineIcon />
                 </IconButton>
               </div>

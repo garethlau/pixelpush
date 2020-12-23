@@ -12,6 +12,7 @@ import animPhoto from "../_animations/photo";
 import { PhotoDetailsContext } from "../_contexts/photoDetails";
 import useRemovePhoto from "../_mutations/useRemovePhoto";
 import { useParams } from "react-router-dom";
+import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -30,6 +31,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+function getMobileOperatingSystem() {
+  let userAgent = navigator.userAgent || navigator.vendor || window.opera;
+  if (/windows phone/i.test(userAgent)) return "Windows Phone";
+  if (/android/i.test(userAgent)) return "Android";
+  if (/ipad|iPhone|iPod/.test(userAgent) && !window.MSStream) return "iOS";
+  return "Unknown";
+}
+
 export default function Photo({ photo }) {
   const classes = useStyles();
   const { data: user, isLoading } = useUser();
@@ -45,6 +54,44 @@ export default function Photo({ photo }) {
 
   function openDetails() {
     open(photo);
+  }
+
+  async function download() {
+    try {
+      const response = await axios.get(photo.url, { responseType: "blob" });
+      const { data } = response;
+      let blobData = [data];
+      let blob = new Blob(blobData, { type: data.type });
+      let os = getMobileOperatingSystem();
+      if (os === "iOS") {
+        let reader = new FileReader();
+        reader.onload = (e) => {
+          window.location.href = reader.result;
+        };
+
+        reader.addEventListener("loadend", () => {});
+        reader.addEventListener("error", () => {});
+        reader.readAsDataURL(blob);
+      } else {
+        try {
+          let blobURL = window.URL.createObjectURL(blob);
+          let tempLink = document.createElement("a");
+          tempLink.style.display = "none";
+          tempLink.href = blobURL;
+          tempLink.setAttribute("download", photo.name);
+          if (typeof tempLink.download === "undefined") {
+            tempLink.setAttribute("target", "_blank");
+          }
+
+          document.body.appendChild(tempLink);
+          tempLink.click();
+          document.body.removeChild(tempLink);
+          window.URL.revokeObjectURL(blobURL);
+        } catch (err) {}
+      }
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   async function remove() {
@@ -79,7 +126,7 @@ export default function Photo({ photo }) {
               </IconButton>
             </div>
             <div>
-              <IconButton color="primary">
+              <IconButton color="primary" onClick={download}>
                 <GetAppIcon />
               </IconButton>
             </div>

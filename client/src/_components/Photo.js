@@ -1,7 +1,7 @@
 import { useState, useContext } from "react";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
-import useUser from "../_queries/useUser";
+import useAuthedUser from "../_queries/useAuthedUser";
 import RemoveCircleOutlineIcon from "@material-ui/icons/RemoveCircleOutline";
 import IconButton from "@material-ui/core/IconButton";
 import GetAppIcon from "@material-ui/icons/GetApp";
@@ -58,7 +58,7 @@ function getMobileOperatingSystem() {
 
 export default function Photo({ photo }) {
   const classes = useStyles();
-  const { data: user, isLoading } = useUser();
+  const { data: user, isLoading } = useAuthedUser();
   const [showActions, setShowActions] = useState(false);
   const { open } = useContext(PhotoDetailsContext);
   const { albumCode } = useParams();

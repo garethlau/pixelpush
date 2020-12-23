@@ -21,9 +21,10 @@ import UploadQueue from "../_components/UploadQueue";
 import { UploadQueueContext } from "../_contexts/uploadQueue";
 import { UploadProgressContext } from "../_contexts/uploadProgress";
 import Photo from "../_components/Photo";
-import useUser from "../_queries/useUser";
+import useAuthedUser from "../_queries/useAuthedUser";
 import PhotoDetails from "../_components/PhotoDetails";
 import Skeleton from "@material-ui/lab/Skeleton";
+import useUser from "../_queries/useUser";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -33,6 +34,9 @@ const useStyles = makeStyles((theme) => ({
   content: {
     maxWidth: "960px",
     margin: "auto",
+  },
+  info: {
+    margin: "30px 0",
   },
   uploadBtn: {
     position: "fixed",
@@ -57,7 +61,8 @@ export default function Album() {
   const { data: photos, refetch: refetchPhotos } = usePhotos(albumCode);
   const { uploadQueue } = useContext(UploadQueueContext);
   const { progress, setProgress } = useContext(UploadProgressContext);
-  const { data: user } = useUser();
+  const { data: user } = useAuthedUser();
+  const { data: creator } = useUser(album?.createdBy);
   const queryClient = new QueryClient();
 
   useEffect(() => {
@@ -106,18 +111,33 @@ export default function Album() {
       <PhotoDetails />
       <div className={classes.root}>
         <div className={classes.content}>
-          <div>
+          <div className={classes.info}>
             <Typography variant="caption">{albumCode}</Typography>
             <Typography variant="h1">
-              {album ? album.title : <Skeleton />}
+              {album ? album.title : <Skeleton width={400} />}
             </Typography>
-            <Typography variant="h3">
-              {album ? new Date(album.date).toUTCString() : <Skeleton />}
+            <Typography variant="h5">
+              {album ? (
+                new Date(album.date).toLocaleDateString()
+              ) : (
+                <Skeleton width={500} />
+              )}
+            </Typography>
+            <Typography variant="h5">
+              {creator ? (
+                "Created by " +
+                creator?.firstName +
+                " " +
+                creator?.lastName +
+                " on " +
+                new Date(album.createdAt).toLocaleDateString()
+              ) : (
+                <Skeleton width={300} />
+              )}
             </Typography>
           </div>
 
           <div>
-            <Typography variant="h1">Photos</Typography>
             {photos?.map((photo, index) => (
               <Photo photo={photo} key={index} />
             ))}

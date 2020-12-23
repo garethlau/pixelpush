@@ -1,11 +1,14 @@
 import { useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
+import Typography from "@material-ui/core/Typography";
+import { AnimatePresence, motion } from "framer-motion";
+// Contexts
 import { UploadQueueContext } from "../_contexts/uploadQueue";
 import { UploadProgressContext } from "../_contexts/uploadProgress";
-import Typography from "@material-ui/core/Typography";
+// Components
 import LinearProgress from "./LinearProgress";
+// Utils
 import { formatFileSize } from "../_utils/formatter";
-import { AnimatePresence, motion } from "framer-motion";
 
 const useStyles = makeStyles((theme) => ({
   root: {

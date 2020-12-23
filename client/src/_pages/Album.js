@@ -2,33 +2,28 @@ import React, { useEffect, useCallback, useContext } from "react";
 import { useParams, useHistory, useLocation } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import { useDropzone } from "react-dropzone";
-import { QueryClient } from "react-query";
-
 import { v4 as uuidv4 } from "uuid";
-
 import Typography from "@material-ui/core/Typography";
-
-import useAlbum from "../_queries/useAlbum";
-// import useUpload from "../_mutations/useUpload";
-import usePhotos from "../_queries/usePhotos";
-
-import upload from "../_utils/upload";
-import useQueue from "../_hooks/useQueue";
-
-import Button from "../_components/Button";
-import UploadQueue from "../_components/UploadQueue";
-
+import Skeleton from "@material-ui/lab/Skeleton";
+import { useSnackbar } from "notistack";
+import { AnimatePresence, motion } from "framer-motion";
+// Contexts
 import { UploadQueueContext } from "../_contexts/uploadQueue";
 import { UploadProgressContext } from "../_contexts/uploadProgress";
-import Photo from "../_components/Photo";
+// Queries
+import useAlbum from "../_queries/useAlbum";
 import useAuthedUser from "../_queries/useAuthedUser";
-import PhotoDetails from "../_components/PhotoDetails";
-import Skeleton from "@material-ui/lab/Skeleton";
+import usePhotos from "../_queries/usePhotos";
 import useUser from "../_queries/useUser";
+// Mutations
 import useDeleteAlbum from "../_mutations/useDeleteAlbum";
-import { AnimatePresence, motion } from "framer-motion";
-
-import { useSnackbar } from "notistack";
+// Components
+import Button from "../_components/Button";
+import UploadQueue from "../_components/UploadQueue";
+import Photo from "../_components/Photo";
+import PhotoDetails from "../_components/PhotoDetails";
+// Utils
+import upload from "../_utils/upload";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -63,14 +58,11 @@ export default function Album() {
   const classes = useStyles();
   const { albumCode } = useParams();
   const { data: album } = useAlbum(albumCode);
-  // const uploadQueue = useQueue([]);
-  // const { mutateAsync: upload } = useUpload(albumCode);
   const { data: photos, refetch: refetchPhotos } = usePhotos(albumCode);
   const { uploadQueue } = useContext(UploadQueueContext);
-  const { progress, setProgress } = useContext(UploadProgressContext);
+  const { setProgress } = useContext(UploadProgressContext);
   const { data: user } = useAuthedUser();
   const { data: creator } = useUser(album?.createdBy);
-  const queryClient = new QueryClient();
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const history = useHistory();
   const location = useLocation();
@@ -78,14 +70,9 @@ export default function Album() {
     albumCode
   );
 
-  useEffect(() => {
-    console.log(album);
-  }, [album]);
-
   useEffect(async () => {
     if (uploadQueue.size() > 0) {
       const file = uploadQueue.peek();
-      console.log("Begin Uploading ", file.name);
       await upload(albumCode, file, {
         onUploadProgress: ({ loaded, total }) => {
           setProgress(loaded / total);
@@ -116,24 +103,16 @@ export default function Album() {
   }
 
   const onDrop = useCallback(async (droppedFiles) => {
-    // Do something with the files
-
     const acceptedFiles = droppedFiles.filter(isValidType).map((file) => {
       // Generate a key for each file
       const key = uuidv4();
       file.key = key;
 
-      // Generate dimensions for the image
-      const objectURL = URL.createObjectURL(file);
-
       return file;
     });
-
-    console.log(acceptedFiles);
-
     uploadQueue.enqueueMany(acceptedFiles);
   }, []);
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+  const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
   return (
     <React.Fragment>

@@ -1,20 +1,21 @@
 import { makeStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
-import TextInput from "../_components/TextInput";
 import TextField from "@material-ui/core/TextField";
-import Button from "../_components/Button";
 import { useHistory } from "react-router-dom";
-import useTextInput from "../_hooks/useTextInput";
 import { useState } from "react";
-import useCreateAlbum from "../_mutations/useCreateAlbum";
 import { useSnackbar } from "notistack";
 import {
   MuiPickersUtilsProvider,
-  KeyboardTimePicker,
   KeyboardDatePicker,
 } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
+// Mutations
+import useCreateAlbum from "../_mutations/useCreateAlbum";
+// Components
+import Button from "../_components/Button";
 import Seperator from "../_components/Seperator";
+// Hooks
+import useTextInput from "../_hooks/useTextInput";
+// Assets
 import backgroundImg from "../_assets/images/home-background.jpg";
 
 const useStyles = makeStyles((theme) => ({

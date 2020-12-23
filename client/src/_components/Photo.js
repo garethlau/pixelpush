@@ -1,19 +1,23 @@
 import { useState, useContext } from "react";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
-import useAuthedUser from "../_queries/useAuthedUser";
 import RemoveCircleOutlineIcon from "@material-ui/icons/RemoveCircleOutline";
 import IconButton from "@material-ui/core/IconButton";
 import GetAppIcon from "@material-ui/icons/GetApp";
 import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 import { useInView } from "react-intersection-observer";
 import { motion, AnimatePresence } from "framer-motion";
-import animPhoto from "../_animations/photo";
-import { PhotoDetailsContext } from "../_contexts/photoDetails";
-import useRemovePhoto from "../_mutations/useRemovePhoto";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import Skeleton from "@material-ui/lab/Skeleton";
+// Contexts
+import { PhotoDetailsContext } from "../_contexts/photoDetails";
+// Queries
+import useAuthedUser from "../_queries/useAuthedUser";
+// Mutations
+import useRemovePhoto from "../_mutations/useRemovePhoto";
+// Animations
+import animPhoto from "../_animations/photo";
 
 const useStyles = makeStyles((theme) => ({
   root: {

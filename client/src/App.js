@@ -10,8 +10,6 @@ import { UploadProgressProvider } from "./_contexts/uploadProgress";
 import { PhotoDetailsProvider } from "./_contexts/photoDetails";
 
 import Home from "./_pages/Home";
-import Upload from "./_pages/Upload";
-import Font from "./_pages/Font";
 import Album from "./_pages/Album";
 import Authenticate from "./_pages/Authenticate";
 
@@ -37,9 +35,7 @@ function App() {
                 <Router>
                   <Switch>
                     <Route path="/" exact component={Home} />
-                    <Route path="/upload" component={Upload} />
                     <Route path="/albums/:albumCode" component={Album} />
-                    <Route path="/font" component={Font} />
                     <Route
                       path="/signup"
                       render={(routeProps) => <Authenticate {...routeProps} />}

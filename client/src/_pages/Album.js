@@ -205,7 +205,11 @@ export default function Album() {
           {!!user ? (
             <div className={classes.uploadBtn} {...getRootProps()}>
               <input {...getInputProps()} />
-              <Button variant="contained" color="primary">
+              <Button
+                variant="contained"
+                color="primary"
+                isLoading={uploadQueue.size() > 0}
+              >
                 Upload
               </Button>
             </div>

@@ -45,6 +45,8 @@ const useStyles = makeStyles((theme) => ({
     position: "relative",
     height: 0,
     overflow: "hidden",
+    boxShadow: theme.shadows[5],
+    borderRadius: "3px",
   },
   skeleton: {
     height: "100%",
@@ -143,7 +145,11 @@ export default function Photo({ photo }) {
             className={classes.skeletonContainer}
             key={"loader"}
           >
-            <Skeleton variant="rect" className={classes.skeleton} />
+            <Skeleton
+              variant="rect"
+              animation="wave"
+              className={classes.skeleton}
+            />
           </motion.div>
         )}
 

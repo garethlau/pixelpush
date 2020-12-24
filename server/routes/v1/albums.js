@@ -60,6 +60,9 @@ router.get("/:albumCode/photos", async (req, res) => {
   const { albumCode } = req.params;
   try {
     const album = await Album.findOne({ code: albumCode }).exec();
+    if (!album) {
+      return res.status(404).send({ message: "Album not found." });
+    }
     const photos = album.photos;
     if (!photos) {
       return res.status(200).send({ urls: [] });
@@ -77,6 +80,7 @@ router.get("/:albumCode/photos", async (req, res) => {
 
     return res.status(200).send({ photos: photosWithSignedUrl });
   } catch (error) {
+    console.log(error);
     return res.status(500).send(error);
   }
 });

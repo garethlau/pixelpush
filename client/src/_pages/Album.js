@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useContext } from "react";
+import React, { useEffect, useCallback, useContext, useState } from "react";
 import { useParams, useHistory, useLocation } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import { useDropzone } from "react-dropzone";
@@ -22,6 +22,7 @@ import Button from "../_components/Button";
 import UploadQueue from "../_components/UploadQueue";
 import Photo from "../_components/Photo";
 import PhotoDetails from "../_components/PhotoDetails";
+import DoesNotExistModal from "../_components/DoesNotExistModal";
 // Utils
 import upload from "../_utils/upload";
 
@@ -57,7 +58,7 @@ function isValidType(file) {
 export default function Album() {
   const classes = useStyles();
   const { albumCode } = useParams();
-  const { data: album } = useAlbum(albumCode);
+  const { data: album, isLoading: loadingAlbum } = useAlbum(albumCode);
   const { data: photos, refetch: refetchPhotos } = usePhotos(albumCode);
   const { uploadQueue } = useContext(UploadQueueContext);
   const { setProgress } = useContext(UploadProgressContext);
@@ -69,6 +70,14 @@ export default function Album() {
   const { mutateAsync: _deleteAlbum, isLoading: isDeleting } = useDeleteAlbum(
     albumCode
   );
+  const [dne, setDne] = useState(false);
+
+  useEffect(() => {
+    // Check if the album exists
+    if (!loadingAlbum && !album) {
+      setDne(true);
+    }
+  }, [album, loadingAlbum]);
 
   useEffect(async () => {
     if (uploadQueue.size() > 0) {
@@ -118,6 +127,7 @@ export default function Album() {
     <React.Fragment>
       <UploadQueue />
       <PhotoDetails />
+      <DoesNotExistModal open={dne} />
       <div className={classes.root}>
         <div className={classes.content}>
           <div className={classes.info}>

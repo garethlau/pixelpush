@@ -131,7 +131,9 @@ export default function Album() {
       <div className={classes.root}>
         <div className={classes.content}>
           <div className={classes.info}>
-            <Typography variant="caption">{albumCode}</Typography>
+            <Typography variant="caption">
+              {album ? albumCode : <Skeleton width={200} />}
+            </Typography>
             <Typography variant="h1">
               {album ? album.title : <Skeleton width={400} />}
             </Typography>

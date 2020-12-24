@@ -14,7 +14,6 @@ const useStyles = makeStyles((theme) => ({
     opacity: 0.7,
   },
   label: {
-    color: "white",
     textTransform: "none",
     fontWeight: 500,
     fontSize: "16px",
@@ -26,6 +25,12 @@ const useStyles = makeStyles((theme) => ({
     transform: "translate(-50%, -50%)",
     height: "24px",
   },
+  contained: {
+    color: "white",
+  },
+  outlinedPrimary: {
+    color: theme.palette.primary.main,
+  },
 }));
 
 export default function _Button({ children, isLoading, ...others }) {
@@ -35,6 +40,8 @@ export default function _Button({ children, isLoading, ...others }) {
       classes={{
         label: classes.label,
         disabled: classes.disabled,
+        outlinedPrimary: classes.outlinedPrimary,
+        contained: classes.contained,
       }}
       {...others}
     >

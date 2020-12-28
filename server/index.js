@@ -22,6 +22,7 @@ const corsOptions = {
       callback(new Error(`Origin '${origin}' not allowed by cors`));
     }
   },
+  credentials: true,
 };
 
 const app = express();

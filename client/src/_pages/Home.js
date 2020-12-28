@@ -1,7 +1,7 @@
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import { useHistory } from "react-router-dom";
-import { useState } from "react";
 import { useSnackbar } from "notistack";
 import {
   MuiPickersUtilsProvider,
@@ -12,7 +12,6 @@ import DateFnsUtils from "@date-io/date-fns";
 import useCreateAlbum from "../_mutations/useCreateAlbum";
 // Components
 import Button from "../_components/Button";
-import Seperator from "../_components/Seperator";
 // Hooks
 import useTextInput from "../_hooks/useTextInput";
 // Assets
@@ -105,60 +104,53 @@ export default function Home() {
   }
 
   return (
-    <div className={classes.root}>
-      <img src={backgroundImg} className={classes.backgroundImg} />
-      <div className={classes.parent}>
-        <div className={classes.form}>
-          <div>
-            <div className={classes.input}>
-              <TextField
-                label="Event Name"
-                fullWidth
-                value={title.value}
-                onChange={title.onChange}
-              />
-            </div>
-            <div className={classes.input}>
-              <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                <KeyboardDatePicker
-                  disableToolbar
-                  variant="inline"
-                  format="MM/dd/yyyy"
-                  margin="normal"
-                  id="date-picker-inline"
-                  label="Date"
-                  value={selectedDate}
-                  onChange={handleDateChange}
-                  disableFuture
-                  KeyboardButtonProps={{
-                    "aria-label": "change date",
-                  }}
+    <React.Fragment>
+      <div className={classes.root}>
+        <img src={backgroundImg} className={classes.backgroundImg} />
+        <div className={classes.parent}>
+          <div className={classes.form}>
+            <div>
+              <div className={classes.input}>
+                <TextField
+                  label="Event Name"
+                  fullWidth
+                  value={title.value}
+                  onChange={title.onChange}
                 />
-              </MuiPickersUtilsProvider>
+              </div>
+              <div className={classes.input}>
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                  <KeyboardDatePicker
+                    disableToolbar
+                    variant="inline"
+                    format="MM/dd/yyyy"
+                    margin="normal"
+                    id="date-picker-inline"
+                    label="Date"
+                    value={selectedDate}
+                    onChange={handleDateChange}
+                    disableFuture
+                    KeyboardButtonProps={{
+                      "aria-label": "change date",
+                    }}
+                  />
+                </MuiPickersUtilsProvider>
+              </div>
             </div>
-          </div>
-          <div className={classes.input}>
-            <Button
-              fullWidth
-              variant="contained"
-              color="primary"
-              onClick={submit}
-              isLoading={creatingAlbum}
-            >
-              Create Album
-            </Button>
-          </div>
-          <div className={classes.input}>
-            <Seperator>OR</Seperator>
-          </div>
-
-          <div className={classes.input}>
-            <Button fullWidth variant="contained" color="primary">
-              I have a link
-            </Button>
+            <div className={classes.input}>
+              <Button
+                fullWidth
+                variant="contained"
+                color="primary"
+                onClick={submit}
+                isLoading={creatingAlbum}
+              >
+                Create Album
+              </Button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </React.Fragment>
   );
 }

@@ -17,7 +17,9 @@ export default function useUser() {
     });
   }
 
-  const config = {};
+  const config = {
+    retry: 1,
+  };
 
   return useQuery(queryKey, query, config);
 }

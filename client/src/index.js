@@ -63,6 +63,22 @@ axios.interceptors.response.use(
   }
 );
 
+console.log(
+  "%c PIXELPUSH",
+  "font-size: 60px; font-family: 'DM Sans', sans-serif;"
+);
+console.log(
+  "%c Built by Gareth Lau (https://garethlau.me)",
+  "font-family: 'DM Sans', sans-serif;"
+);
+
+function noop() {}
+if (process.env.NODE_ENV === "production") {
+  console.log = noop;
+  console.warn = noop;
+  console.error = noop;
+}
+
 ReactDOM.render(
   <React.StrictMode>
     <App />

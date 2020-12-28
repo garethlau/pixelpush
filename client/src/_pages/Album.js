@@ -23,6 +23,7 @@ import UploadQueue from "../_components/UploadQueue";
 import Photo from "../_components/Photo";
 import PhotoDetails from "../_components/PhotoDetails";
 import DoesNotExistModal from "../_components/DoesNotExistModal";
+import ProfileCoin from "../_components/ProfileCoin";
 // Utils
 import upload from "../_utils/upload";
 import { formatDate } from "../_utils/formatter";
@@ -50,6 +51,7 @@ const useStyles = makeStyles((theme) => ({
     },
     margin: "auto",
     marginBottom: "150px",
+    position: "relative",
   },
   info: {
     margin: "30px 0",
@@ -176,6 +178,7 @@ export default function Album() {
       <DoesNotExistModal open={dne} />
       <div className={classes.root}>
         <div className={classes.content}>
+          <ProfileCoin />
           <div className={classes.info}>
             <Typography variant="caption">
               {album ? albumCode : <Skeleton width={200} />}

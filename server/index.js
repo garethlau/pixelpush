@@ -8,7 +8,11 @@ const { subscribe } = require("./services/eventSubscription");
 const PORT = process.env.PORT || 5000;
 const NODE_ENV = process.env.NODE_ENV;
 
-const whitelist = ["http://localhost:3000", "http://localhost:5000/"];
+const whitelist = [
+  "http://localhost:3000",
+  "http://localhost:5000/",
+  "http://pixelpush.garethdev.space",
+];
 
 const corsOptions = {
   origin: (origin, callback) => {

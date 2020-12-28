@@ -25,6 +25,7 @@ import PhotoDetails from "../_components/PhotoDetails";
 import DoesNotExistModal from "../_components/DoesNotExistModal";
 // Utils
 import upload from "../_utils/upload";
+import { formatDate } from "../_utils/formatter";
 
 const EventTypes = {
   IMAGE_LIST_UPDATED: "IMAGE_LIST_UPDATED",
@@ -183,19 +184,14 @@ export default function Album() {
               {album ? album.title : <Skeleton width={400} />}
             </Typography>
             <Typography variant="h5">
-              {album ? (
-                new Date(album.date).toLocaleDateString()
-              ) : (
-                <Skeleton width={500} />
-              )}
+              {album ? formatDate(album.date) : <Skeleton width={500} />}
             </Typography>
             {creator ? (
               <React.Fragment>
                 {album.createdBy === user?._id ? (
                   <div>
-                    <Typography variant="h5">
-                      You created this album on{" "}
-                      {new Date(album.createdAt).toLocaleDateString()}
+                    <Typography variant="body1">
+                      You created this album on {formatDate(album.createdAt)}
                     </Typography>
                     <Button
                       onClick={deleteAlbum}
@@ -207,13 +203,13 @@ export default function Album() {
                     </Button>
                   </div>
                 ) : (
-                  <Typography variant="h5">
+                  <Typography variant="body1">
                     {"Created by " +
                       creator?.firstName +
                       " " +
                       creator?.lastName +
                       " on " +
-                      new Date(album.createdAt).toLocaleDateString()}
+                      formatDate(album.createdAt)}
                   </Typography>
                 )}
               </React.Fragment>

@@ -11,6 +11,10 @@ const s3 = require("../../s3");
 const keys = require("../../config/keys");
 
 const auth = require("../../middlewares/auth");
+const {
+  notifyClients,
+  EventTypes,
+} = require("../../services/eventSubscription");
 
 function generateCode() {
   let result = "";
@@ -122,6 +126,9 @@ router.delete("/:albumCode", auth.enforce, async (req, res) => {
     // Delete the album from mongo
     await album.delete();
 
+    // Notify clients
+    notifyClients(albumCode, EventTypes.ALBUM_DELETED);
+
     return res.status(200).send({ message: "Album deleted." });
   } catch (error) {
     console.log(error);
@@ -155,6 +162,10 @@ router.put("/:albumCode/photos", auth.enforce, async (req, res) => {
 
     album.photos = [...photos, newPhoto];
     const updatedAlbum = await album.save();
+
+    // Notify clients
+    notifyClients(albumCode, EventTypes.IMAGE_LIST_UPDATED);
+
     return res.status(200).send({ album: updatedAlbum });
   } catch (error) {
     return res.status(500).send(error);
@@ -196,6 +207,9 @@ router.delete("/:albumCode/photos/:key", auth.enforce, async (req, res) => {
 
     // Save the new album
     const updatedAlbum = await album.save();
+
+    // Notify clients
+    notifyClients(albumCode, EventTypes.IMAGE_LIST_UPDATED);
 
     return res.status(200).send({ album: updatedAlbum });
   } catch (error) {

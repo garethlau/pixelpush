@@ -26,6 +26,16 @@ import DoesNotExistModal from "../_components/DoesNotExistModal";
 // Utils
 import upload from "../_utils/upload";
 
+const EventTypes = {
+  IMAGE_LIST_UPDATED: "IMAGE_LIST_UPDATED",
+  ALBUM_DELETED: "ALBUM_DELETED",
+};
+
+const EVENT_SOURCE_URL =
+  process.env.NODE_ENV === "production"
+    ? "http://pixelpush.garethdev.space"
+    : "http://localhost:5000";
+
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100vw",
@@ -71,6 +81,36 @@ export default function Album() {
     albumCode
   );
   const [dne, setDne] = useState(false);
+
+  const [listening, setListening] = useState(false);
+
+  useEffect(() => {
+    if (!listening && albumCode) {
+      const events = new EventSource(
+        EVENT_SOURCE_URL + "/subscribe/" + albumCode
+      );
+      events.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        console.log("Data from event source ", data);
+        if (data.event) {
+          if (data.event === EventTypes.IMAGE_LIST_UPDATED) {
+            refetchPhotos();
+          } else if (data.event === EventTypes.ALBUM_DELETED) {
+            enqueueSnackbar(
+              "This album has been deleted by the creator. Redirecting you to the home page.",
+              { variant: "default" }
+            );
+            setTimeout(() => {
+              closeSnackbar();
+              history.push("/");
+            }, 3000);
+          }
+        }
+      };
+
+      setListening(true);
+    }
+  }, [listening, albumCode]);
 
   useEffect(() => {
     // Check if the album exists

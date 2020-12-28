@@ -33,7 +33,7 @@ const EventTypes = {
 
 const EVENT_SOURCE_URL =
   process.env.NODE_ENV === "production"
-    ? "http://pixelpush.garethdev.space"
+    ? "https://pixelpush.garethdev.space"
     : "http://localhost:5000";
 
 const useStyles = makeStyles((theme) => ({

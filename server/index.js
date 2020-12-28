@@ -11,7 +11,7 @@ const NODE_ENV = process.env.NODE_ENV;
 const whitelist = [
   "http://localhost:3000",
   "http://localhost:5000/",
-  "http://pixelpush.garethdev.space",
+  "https://pixelpush.garethdev.space",
 ];
 
 const corsOptions = {

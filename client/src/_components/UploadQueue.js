@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useMemo } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import { AnimatePresence, motion } from "framer-motion";
@@ -43,14 +43,16 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: theme.shadows[5],
   },
   progress: {
-    margin: 10,
+    margin: "5px 0",
   },
 }));
 
 export default function UploadQueue() {
   const classes = useStyles();
   const { uploadQueue } = useContext(UploadQueueContext);
-  const { progress } = useContext(UploadProgressContext);
+  const { getProgress, isUploading, uploads } = useContext(
+    UploadProgressContext
+  );
 
   return (
     <AnimatePresence>
@@ -67,11 +69,6 @@ export default function UploadQueue() {
             </Typography>
           </div>
           <div className={classes.cardContainer}>
-            <LinearProgress
-              className={classes.progress}
-              variant="determinate"
-              value={(progress * 100).toFixed(0)}
-            />
             {uploadQueue.values.map((file, index) => (
               <div key={index} className={classes.fileCard}>
                 <Typography noWrap variant="body1">
@@ -80,6 +77,13 @@ export default function UploadQueue() {
                 <Typography noWrap variant="caption">
                   {formatFileSize(file.size)}
                 </Typography>
+                {isUploading(file.key) && (
+                  <LinearProgress
+                    className={classes.progress}
+                    variant="determinate"
+                    value={(getProgress(file.key) * 100).toFixed(0)}
+                  />
+                )}
               </div>
             ))}
           </div>

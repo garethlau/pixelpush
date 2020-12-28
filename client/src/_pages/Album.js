@@ -44,6 +44,9 @@ const useStyles = makeStyles((theme) => ({
   },
   content: {
     maxWidth: "960px",
+    [theme.breakpoints.down("md")]: {
+      width: "90vw",
+    },
     margin: "auto",
     marginBottom: "150px",
   },
@@ -71,7 +74,9 @@ export default function Album() {
   const { data: album, isLoading: loadingAlbum } = useAlbum(albumCode);
   const { data: photos, refetch: refetchPhotos } = usePhotos(albumCode);
   const { uploadQueue } = useContext(UploadQueueContext);
-  const { setProgress } = useContext(UploadProgressContext);
+  const { setProgress, startProgress, completeProgress } = useContext(
+    UploadProgressContext
+  );
   const { data: user } = useAuthedUser();
   const { data: creator } = useUser(album?.createdBy);
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
@@ -122,13 +127,13 @@ export default function Album() {
   useEffect(async () => {
     if (uploadQueue.size() > 0) {
       const file = uploadQueue.peek();
+      startProgress(file.key);
       await upload(albumCode, file, {
         onUploadProgress: ({ loaded, total }) => {
-          setProgress(loaded / total);
+          setProgress(file.key, loaded, total);
         },
       });
-      setProgress(0);
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      completeProgress(file.key);
       refetchPhotos();
       uploadQueue.dequeue();
     }

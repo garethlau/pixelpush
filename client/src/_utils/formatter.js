@@ -5,3 +5,13 @@ export function formatFileSize(size) {
       : `${(size / 1024).toFixed(1)} KB`
     : "";
 }
+
+export function formatDate(dateStr) {
+  const localeDate = {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  };
+
+  return new Date(dateStr).toLocaleDateString(undefined, localeDate);
+}

@@ -105,7 +105,7 @@ export default function Album() {
             refetchPhotos();
           } else if (data.event === EventTypes.ALBUM_DELETED) {
             enqueueSnackbar(
-              "This album has been deleted by the creator. Redirecting you to the home page.",
+              "This album has been deleted. Redirecting you to the home page.",
               { variant: "default" }
             );
             setTimeout(() => {
@@ -118,7 +118,7 @@ export default function Album() {
 
       setListening(true);
     }
-  }, [listening, albumCode]);
+  }, [listening, albumCode, album, user]);
 
   useEffect(() => {
     // Check if the album exists
@@ -145,13 +145,6 @@ export default function Album() {
   async function deleteAlbum() {
     try {
       await _deleteAlbum();
-      enqueueSnackbar("Album deleted. Redirecting you to the home page.", {
-        variant: "success",
-      });
-      setTimeout(() => {
-        closeSnackbar();
-        history.push("/");
-      }, 3000);
     } catch (error) {
       enqueueSnackbar("There was an error. Please try again.", {
         variant: "error",

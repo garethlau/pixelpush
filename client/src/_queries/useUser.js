@@ -10,7 +10,6 @@ export default function useUser(userId) {
         .get(`/api/v1/users/${userId}`)
         .then((response) => {
           const { user } = response.data;
-          console.log(user);
           resolve(user);
         })
         .catch((error) => {

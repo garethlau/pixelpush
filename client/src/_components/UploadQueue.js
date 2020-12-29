@@ -69,23 +69,31 @@ export default function UploadQueue() {
             </Typography>
           </div>
           <div className={classes.cardContainer}>
-            {uploadQueue.values.map((file, index) => (
-              <div key={index} className={classes.fileCard}>
-                <Typography noWrap variant="body1">
-                  {file.name}
-                </Typography>
-                <Typography noWrap variant="caption">
-                  {formatFileSize(file.size)}
-                </Typography>
-                {isUploading(file.key) && (
-                  <LinearProgress
-                    className={classes.progress}
-                    variant="determinate"
-                    value={(getProgress(file.key) * 100).toFixed(0)}
-                  />
-                )}
-              </div>
-            ))}
+            <AnimatePresence>
+              {uploadQueue.values.map((file) => (
+                <motion.div
+                  key={file.key}
+                  className={classes.fileCard}
+                  initial={{ y: 50, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  exit={{ y: -50, opacity: 0, scaleY: 0.5 }}
+                >
+                  <Typography noWrap variant="body1">
+                    {file.name}
+                  </Typography>
+                  <Typography noWrap variant="caption">
+                    {formatFileSize(file.size)}
+                  </Typography>
+                  {isUploading(file.key) && (
+                    <LinearProgress
+                      className={classes.progress}
+                      variant="determinate"
+                      value={(getProgress(file.key) * 100).toFixed(0)}
+                    />
+                  )}
+                </motion.div>
+              ))}
+            </AnimatePresence>
           </div>
         </motion.div>
       )}

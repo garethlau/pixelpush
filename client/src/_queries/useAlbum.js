@@ -19,6 +19,7 @@ export default function useAlbum(albumCode) {
 
   const config = {
     enabled: !!albumCode,
+    retry: false,
   };
 
   return useQuery(queryKey, query, config);

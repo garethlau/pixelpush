@@ -19,6 +19,7 @@ export default function useUser() {
 
   const config = {
     retry: 1,
+    refetchOnWindowFocus: false,
   };
 
   return useQuery(queryKey, query, config);

@@ -223,13 +223,13 @@ export default function Album() {
           </MobileView>
           <div className={classes.info}>
             <Typography variant="caption">
-              {album ? albumCode : <Skeleton width={200} />}
+              {album ? albumCode : <Skeleton width={150} />}
             </Typography>
             <Typography variant="h1">
-              {album ? album.title : <Skeleton width={400} />}
+              {album ? album.title : <Skeleton />}
             </Typography>
             <Typography variant="h5">
-              {album ? formatDate(album.date) : <Skeleton width={500} />}
+              {album ? formatDate(album.date) : <Skeleton width={200} />}
             </Typography>
             {creator ? (
               <React.Fragment>
@@ -269,7 +269,7 @@ export default function Album() {
               </React.Fragment>
             ) : (
               <Typography variant="h5">
-                <Skeleton width={300} />
+                <Skeleton />
               </Typography>
             )}
           </div>

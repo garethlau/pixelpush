@@ -122,7 +122,7 @@ export default function Home() {
         <div className={classes.parent}>
           <div className={classes.form}>
             <Typography variant="h2">Pixel Push</Typography>
-            <Typography variant="body1">Share the moments</Typography>
+            <Typography variant="body1">Share the moment</Typography>
             <div>
               <div className={classes.input}>
                 <TextField

@@ -118,7 +118,16 @@ export default function Album() {
 
       setListening(true);
     }
-  }, [listening, albumCode, album, user]);
+  }, [
+    listening,
+    albumCode,
+    album,
+    user,
+    enqueueSnackbar,
+    closeSnackbar,
+    history,
+    refetchPhotos,
+  ]);
 
   useEffect(() => {
     // Check if the album exists
@@ -142,7 +151,14 @@ export default function Album() {
         uploadQueue.dequeue();
       }
     })();
-  }, [uploadQueue]);
+  }, [
+    uploadQueue,
+    refetchPhotos,
+    completeProgress,
+    albumCode,
+    setProgress,
+    startProgress,
+  ]);
 
   async function deleteAlbum() {
     try {
@@ -154,16 +170,19 @@ export default function Album() {
     }
   }
 
-  const onDrop = useCallback(async (droppedFiles) => {
-    const acceptedFiles = droppedFiles.filter(isValidType).map((file) => {
-      // Generate a key for each file
-      const key = uuidv4();
-      file.key = key;
+  const onDrop = useCallback(
+    async (droppedFiles) => {
+      const acceptedFiles = droppedFiles.filter(isValidType).map((file) => {
+        // Generate a key for each file
+        const key = uuidv4();
+        file.key = key;
 
-      return file;
-    });
-    uploadQueue.enqueueMany(acceptedFiles);
-  }, []);
+        return file;
+      });
+      uploadQueue.enqueueMany(acceptedFiles);
+    },
+    [uploadQueue]
+  );
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
   return (

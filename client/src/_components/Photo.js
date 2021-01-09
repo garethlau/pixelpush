@@ -52,6 +52,9 @@ const useStyles = makeStyles((theme) => ({
     top: 0,
     left: 0,
   },
+  btn: {
+    margin: "2.5px",
+  },
 }));
 
 function getMobileOperatingSystem() {
@@ -174,18 +177,33 @@ export default function Photo({ photo, isCreator }) {
             className={classes.actions}
           >
             <div>
-              <IconButton color="primary" onClick={openDetails}>
+              <IconButton
+                className={classes.btn}
+                size="small"
+                color="primary"
+                onClick={openDetails}
+              >
                 <InfoOutlinedIcon />
               </IconButton>
             </div>
             <div>
-              <IconButton color="primary" onClick={download}>
+              <IconButton
+                className={classes.btn}
+                size="small"
+                color="primary"
+                onClick={download}
+              >
                 <GetAppIcon />
               </IconButton>
             </div>
             {canDelete && (
               <div>
-                <IconButton color="primary" onClick={remove}>
+                <IconButton
+                  className={classes.btn}
+                  size="small"
+                  color="primary"
+                  onClick={remove}
+                >
                   <RemoveCircleOutlineIcon />
                 </IconButton>
               </div>

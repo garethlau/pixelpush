@@ -99,7 +99,6 @@ export default function Album() {
       );
       events.onmessage = (event) => {
         const data = JSON.parse(event.data);
-        console.log("Data from event source ", data);
         if (data.event) {
           if (data.event === EventTypes.IMAGE_LIST_UPDATED) {
             refetchPhotos();

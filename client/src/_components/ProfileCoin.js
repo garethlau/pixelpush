@@ -11,12 +11,7 @@ import useLogout from "../_mutations/useLogout";
 import { useSnackbar } from "notistack";
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    position: "absolute",
-    top: "30px",
-    right: "30px",
-    zIndex: 1,
-  },
+  root: {},
   avatar: {
     backgroundColor: blue[300],
     boxShadow: theme.shadows[3],

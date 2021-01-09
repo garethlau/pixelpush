@@ -13,6 +13,7 @@ import Typography from "@material-ui/core/Typography";
 import Skeleton from "@material-ui/lab/Skeleton";
 import { useSnackbar } from "notistack";
 import { AnimatePresence, motion } from "framer-motion";
+import { BrowserView, MobileView } from "react-device-detect";
 // Contexts
 import { UploadQueueContext } from "../_contexts/uploadQueue";
 import { UploadProgressContext } from "../_contexts/uploadProgress";
@@ -70,6 +71,15 @@ const useStyles = makeStyles((theme) => ({
     transform: "translate(-50%, -50%)",
   },
   empty: {},
+  browserProfileCoin: {
+    position: "absolute",
+    top: "30px",
+    right: "30px",
+    zIndex: 1,
+  },
+  mobileProfileCoin: {
+    margin: "20px 0",
+  },
 }));
 
 function isValidType(file) {
@@ -196,7 +206,16 @@ export default function Album() {
       <DoesNotExistModal open={dne} />
       <div className={classes.root}>
         <div className={classes.content}>
-          <ProfileCoin />
+          <BrowserView>
+            <div className={classes.browserProfileCoin}>
+              <ProfileCoin />
+            </div>
+          </BrowserView>
+          <MobileView>
+            <div className={classes.mobileProfileCoin}>
+              <ProfileCoin />
+            </div>
+          </MobileView>
           <div className={classes.info}>
             <Typography variant="caption">
               {album ? albumCode : <Skeleton width={200} />}

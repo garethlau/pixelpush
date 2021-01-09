@@ -9,6 +9,7 @@ import Modal from "@material-ui/core/Modal";
 import Typography from "@material-ui/core/Typography";
 import useLogout from "../_mutations/useLogout";
 import { useSnackbar } from "notistack";
+import { AnimatePresence, motion } from "framer-motion";
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -57,41 +58,50 @@ export default function ProfileCoin() {
     }
   }
 
-  if (isLoading) return null;
   return (
-    <div className={classes.root}>
-      {!user ? (
-        <Button
-          href={`/login?redirect=${location.pathname}`}
-          variant="contained"
-          color="primary"
+    <AnimatePresence>
+      {!isLoading && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 1 }}
+          className={classes.root}
         >
-          Log in
-        </Button>
-      ) : (
-        <React.Fragment>
-          <Avatar className={classes.avatar} onClick={() => setOpen(true)}>
-            {user.firstName.charAt(0)}
-          </Avatar>
-          <Button
-            color="secondary"
-            variant="contained"
-            className={classes.logout}
-            onClick={logout}
-          >
-            Log out
-          </Button>
-          <Modal open={open} onClose={() => setOpen(false)}>
-            <div className={classes.modal}>
-              <Typography variant="h1">Profile</Typography>
-              <Typography variant="body1">
-                You're visible to others as: {user.firstName} {user.lastName}
-              </Typography>
-              <Typography variant="body1">Email: {user.email}</Typography>
-            </div>
-          </Modal>
-        </React.Fragment>
+          {!user ? (
+            <Button
+              href={`/login?redirect=${location.pathname}`}
+              variant="contained"
+              color="primary"
+            >
+              Log in
+            </Button>
+          ) : (
+            <React.Fragment>
+              <Avatar className={classes.avatar} onClick={() => setOpen(true)}>
+                {user.firstName.charAt(0)}
+              </Avatar>
+              <Button
+                color="secondary"
+                variant="contained"
+                className={classes.logout}
+                onClick={logout}
+              >
+                Log out
+              </Button>
+              <Modal open={open} onClose={() => setOpen(false)}>
+                <div className={classes.modal}>
+                  <Typography variant="h1">Profile</Typography>
+                  <Typography variant="body1">
+                    You're visible to others as: {user.firstName}{" "}
+                    {user.lastName}
+                  </Typography>
+                  <Typography variant="body1">Email: {user.email}</Typography>
+                </div>
+              </Modal>
+            </React.Fragment>
+          )}
+        </motion.div>
       )}
-    </div>
+    </AnimatePresence>
   );
 }

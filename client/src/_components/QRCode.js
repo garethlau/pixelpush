@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 import QRCode from "qrcode.react";
 import { makeStyles } from "@material-ui/core/styles";
 
-const ORIGIN = process.env.REACT_APP_ORIGIN || "localhost:3000";
+const ORIGIN = process.env.REACT_APP_ORIGIN || "http://localhost:3000";
 
 const useStyles = makeStyles((theme) => ({
   root: {},

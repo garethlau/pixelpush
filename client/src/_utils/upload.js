@@ -1,5 +1,4 @@
 import axios from "axios";
-import { v4 as uuidv4 } from "uuid";
 
 export default function upload(albumCode, file, config = {}) {
   return new Promise((resolve, reject) => {
@@ -13,7 +12,6 @@ export default function upload(albumCode, file, config = {}) {
         axios
           .put(signedUrl, file, config)
           .then((response) => {
-            console.log(response);
             // Attach file object to album
             const { type, name, size } = file;
             axios
@@ -24,7 +22,6 @@ export default function upload(albumCode, file, config = {}) {
                 size,
               })
               .then((response) => {
-                console.log(response);
                 resolve(response);
               })
               .catch((error) => {

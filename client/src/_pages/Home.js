@@ -49,6 +49,12 @@ const useStyles = makeStyles((theme) => ({
     height: "100%",
     objectFit: "cover",
   },
+  profileCoin: {
+    position: "absolute",
+    top: "30px",
+    right: "30px",
+    zIndex: 1,
+  },
 }));
 
 export default function Home() {
@@ -108,7 +114,9 @@ export default function Home() {
   return (
     <React.Fragment>
       <div className={classes.root}>
-        <ProfileCoin />
+        <div className={classes.profileCoin}>
+          <ProfileCoin />
+        </div>
         <img src={backgroundImg} className={classes.backgroundImg} />
         <div className={classes.parent}>
           <div className={classes.form}>

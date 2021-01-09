@@ -10,11 +10,11 @@ import axios from "axios";
 import Skeleton from "@material-ui/lab/Skeleton";
 import { useSnackbar } from "notistack";
 // Contexts
-import { PhotoDetailsContext } from "../_contexts/photoDetails";
+import { PhotoDetailsContext } from "../../_contexts/photoDetails";
 // Queries
-import useAuthedUser from "../_queries/useAuthedUser";
+import useAuthedUser from "../../_queries/useAuthedUser";
 // Mutations
-import useRemovePhoto from "../_mutations/useRemovePhoto";
+import useRemovePhoto from "../../_mutations/useRemovePhoto";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -31,8 +31,8 @@ const useStyles = makeStyles((theme) => ({
   },
   actions: {
     position: "absolute",
-    right: "10px",
-    top: "50%",
+    left: "50%",
+    bottom: "40px",
     backgroundColor: theme.palette.common.white,
     boxShadow: theme.shadows[3],
     borderRadius: "5px",
@@ -137,7 +137,7 @@ export default function Photo({ photo, isCreator }) {
     <motion.div
       exit={{ opacity: 0, scale: 0.7 }}
       className={classes.root}
-      onMouseEnter={() => setShowActions(true)}
+      onClick={() => setShowActions(!showActions)}
       onMouseLeave={() => setShowActions(false)}
     >
       <AnimatePresence>
@@ -168,45 +168,40 @@ export default function Photo({ photo, isCreator }) {
           onLoad={() => setLoaded(true)}
         />
       </AnimatePresence>
+
       <AnimatePresence>
         {loaded && showActions && (
           <motion.div
-            initial={{ opacity: 0, x: 10, y: "-50%" }}
-            animate={{ opacity: 1, x: 0, y: "-50%" }}
-            exit={{ opacity: 0, x: 10, y: "-50%" }}
+            initial={{ opacity: 0, x: "-50%", y: 10 }}
+            animate={{ opacity: 1, x: "-50%", y: 0 }}
+            exit={{ opacity: 0, x: "-50%", y: 10 }}
             className={classes.actions}
           >
-            <div>
-              <IconButton
-                className={classes.btn}
-                size="small"
-                color="primary"
-                onClick={openDetails}
-              >
-                <InfoOutlinedIcon />
-              </IconButton>
-            </div>
-            <div>
-              <IconButton
-                className={classes.btn}
-                size="small"
-                color="primary"
-                onClick={download}
-              >
-                <GetAppIcon />
-              </IconButton>
-            </div>
+            <IconButton
+              className={classes.btn}
+              size="small"
+              color="primary"
+              onClick={openDetails}
+            >
+              <InfoOutlinedIcon />
+            </IconButton>
+            <IconButton
+              className={classes.btn}
+              size="small"
+              color="primary"
+              onClick={download}
+            >
+              <GetAppIcon />
+            </IconButton>
             {canDelete && (
-              <div>
-                <IconButton
-                  className={classes.btn}
-                  size="small"
-                  color="primary"
-                  onClick={remove}
-                >
-                  <RemoveCircleOutlineIcon />
-                </IconButton>
-              </div>
+              <IconButton
+                className={classes.btn}
+                size="small"
+                color="primary"
+                onClick={remove}
+              >
+                <RemoveCircleOutlineIcon />
+              </IconButton>
             )}
           </motion.div>
         )}

@@ -88,7 +88,7 @@ export default function UploadQueue() {
                     <LinearProgress
                       className={classes.progress}
                       variant="determinate"
-                      value={(getProgress(file.key) * 100).toFixed(0)}
+                      value={getProgress(file.key) * 100}
                     />
                   )}
                 </motion.div>

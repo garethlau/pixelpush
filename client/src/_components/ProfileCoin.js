@@ -4,18 +4,18 @@ import useAuthedUser from "../_queries/useAuthedUser";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "./Button";
 import { useLocation } from "react-router-dom";
-import blue from "@material-ui/core/colors/blue";
 import Modal from "@material-ui/core/Modal";
 import Typography from "@material-ui/core/Typography";
 import useLogout from "../_mutations/useLogout";
 import { useSnackbar } from "notistack";
 import { AnimatePresence, motion } from "framer-motion";
 import FaceIcon from "@material-ui/icons/Face";
+import red from "@material-ui/core/colors/red";
 
 const useStyles = makeStyles((theme) => ({
   root: {},
   avatar: {
-    backgroundColor: blue[300],
+    backgroundColor: red.A200,
     boxShadow: theme.shadows[3],
     float: "left",
     "&:hover": {

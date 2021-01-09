@@ -227,6 +227,7 @@ export default function Album() {
                     variant="contained"
                     color="secondary"
                     isLoading={isDeleting}
+                    style={{ marginLeft: "10px" }}
                   >
                     Delete
                   </Button>

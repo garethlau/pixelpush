@@ -150,14 +150,7 @@ export default function Album() {
         uploadQueue.dequeue();
       }
     })();
-  }, [
-    uploadQueue,
-    refetchPhotos,
-    completeProgress,
-    albumCode,
-    setProgress,
-    startProgress,
-  ]);
+  }, [uploadQueue, albumCode]);
 
   async function deleteAlbum() {
     try {

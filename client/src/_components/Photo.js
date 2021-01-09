@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useMemo } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import RemoveCircleOutlineIcon from "@material-ui/icons/RemoveCircleOutline";
 import IconButton from "@material-ui/core/IconButton";
@@ -62,7 +62,7 @@ function getMobileOperatingSystem() {
   return "Unknown";
 }
 
-export default function Photo({ photo }) {
+export default function Photo({ photo, isCreator }) {
   const classes = useStyles();
   const { data: user, isLoading } = useAuthedUser();
   const [showActions, setShowActions] = useState(false);
@@ -72,6 +72,12 @@ export default function Photo({ photo }) {
   const { enqueueSnackbar } = useSnackbar();
 
   const { mutateAsync: removePhoto } = useRemovePhoto(albumCode);
+
+  const canDelete = useMemo(() => {
+    if (isCreator) return true;
+    if (photo?.uploadedBy === user?._id) return true;
+    return false;
+  }, [photo, isCreator, user]);
 
   function openDetails() {
     open(photo);
@@ -177,7 +183,7 @@ export default function Photo({ photo }) {
                 <GetAppIcon />
               </IconButton>
             </div>
-            {!isLoading && photo.uploadedBy === user?._id && (
+            {canDelete && (
               <div>
                 <IconButton color="primary" onClick={remove}>
                   <RemoveCircleOutlineIcon />

@@ -1,4 +1,10 @@
-import React, { useEffect, useCallback, useContext, useState } from "react";
+import React, {
+  useEffect,
+  useCallback,
+  useContext,
+  useState,
+  useMemo,
+} from "react";
 import { useParams, useHistory, useLocation } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import { useDropzone } from "react-dropzone";
@@ -179,6 +185,10 @@ export default function Album() {
   );
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
+  const isCreator = useMemo(() => {
+    return album?.createdBy === user?._id;
+  }, [album, user]);
+
   return (
     <React.Fragment>
       <UploadQueue />
@@ -199,7 +209,7 @@ export default function Album() {
             </Typography>
             {creator ? (
               <React.Fragment>
-                {album.createdBy === user?._id ? (
+                {isCreator ? (
                   <Typography variant="body1">
                     You created this album on {formatDate(album.createdAt)}
                   </Typography>
@@ -221,7 +231,7 @@ export default function Album() {
                 >
                   Share
                 </Button>
-                {album.createdBy === user?._id && (
+                {isCreator && (
                   <Button
                     onClick={deleteAlbum}
                     variant="contained"
@@ -250,7 +260,7 @@ export default function Album() {
             ) : (
               <AnimatePresence>
                 {photos?.map((photo) => (
-                  <Photo photo={photo} key={photo.key} />
+                  <Photo photo={photo} key={photo.key} isCreator={isCreator} />
                 ))}
               </AnimatePresence>
             )}

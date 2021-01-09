@@ -10,6 +10,7 @@ import { AnimatePresence, motion } from "framer-motion";
 // Contexts
 import { UploadQueueContext } from "../_contexts/uploadQueue";
 import { UploadProgressContext } from "../_contexts/uploadProgress";
+import { ShareModalContext } from "../_contexts/shareModal";
 // Queries
 import useAlbum from "../_queries/useAlbum";
 import useAuthedUser from "../_queries/useAuthedUser";
@@ -80,6 +81,7 @@ export default function Album() {
   const { setProgress, startProgress, completeProgress } = useContext(
     UploadProgressContext
   );
+  const { open: openShareModal } = useContext(ShareModalContext);
   const { data: user } = useAuthedUser();
   const { data: creator } = useUser(album?.createdBy);
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
@@ -198,19 +200,9 @@ export default function Album() {
             {creator ? (
               <React.Fragment>
                 {album.createdBy === user?._id ? (
-                  <div>
-                    <Typography variant="body1">
-                      You created this album on {formatDate(album.createdAt)}
-                    </Typography>
-                    <Button
-                      onClick={deleteAlbum}
-                      variant="contained"
-                      color="secondary"
-                      isLoading={isDeleting}
-                    >
-                      Delete
-                    </Button>
-                  </div>
+                  <Typography variant="body1">
+                    You created this album on {formatDate(album.createdAt)}
+                  </Typography>
                 ) : (
                   <Typography variant="body1">
                     {"Created by " +
@@ -220,6 +212,24 @@ export default function Album() {
                       " on " +
                       formatDate(album.createdAt)}
                   </Typography>
+                )}
+
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={openShareModal}
+                >
+                  Share
+                </Button>
+                {album.createdBy === user?._id && (
+                  <Button
+                    onClick={deleteAlbum}
+                    variant="contained"
+                    color="secondary"
+                    isLoading={isDeleting}
+                  >
+                    Delete
+                  </Button>
                 )}
               </React.Fragment>
             ) : (

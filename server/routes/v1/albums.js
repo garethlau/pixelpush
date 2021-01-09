@@ -177,6 +177,9 @@ router.delete("/:albumCode/photos/:key", auth.enforce, async (req, res) => {
   const { albumCode, key } = req.params;
   try {
     const album = await Album.findOne({ code: albumCode }).exec();
+    if (!album) {
+      return res.status(404).send({ message: "Resource not found." });
+    }
 
     // Check if this user is permitted to remove this photo
     let permitted = false;

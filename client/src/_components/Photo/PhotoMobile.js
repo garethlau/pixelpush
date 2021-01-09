@@ -2,15 +2,14 @@ import { useState, useContext, useMemo } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import RemoveCircleOutlineIcon from "@material-ui/icons/RemoveCircleOutline";
 import IconButton from "@material-ui/core/IconButton";
-import GetAppIcon from "@material-ui/icons/GetApp";
 import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 import { motion, AnimatePresence } from "framer-motion";
 import { useParams } from "react-router-dom";
-import axios from "axios";
 import Skeleton from "@material-ui/lab/Skeleton";
-import { useSnackbar } from "notistack";
 // Contexts
 import { PhotoDetailsContext } from "../../_contexts/photoDetails";
+// Components
+import Button from "../Button";
 // Queries
 import useAuthedUser from "../../_queries/useAuthedUser";
 // Mutations
@@ -33,9 +32,6 @@ const useStyles = makeStyles((theme) => ({
     position: "absolute",
     left: "50%",
     bottom: "40px",
-    backgroundColor: theme.palette.common.white,
-    boxShadow: theme.shadows[3],
-    borderRadius: "5px",
   },
   skeletonContainer: {
     paddingTop: "56.25%",
@@ -57,14 +53,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function getMobileOperatingSystem() {
-  let userAgent = navigator.userAgent || navigator.vendor || window.opera;
-  if (/windows phone/i.test(userAgent)) return "Windows Phone";
-  if (/android/i.test(userAgent)) return "Android";
-  if (/ipad|iPhone|iPod/.test(userAgent) && !window.MSStream) return "iOS";
-  return "Unknown";
-}
-
 export default function Photo({ photo, isCreator }) {
   const classes = useStyles();
   const { data: user, isLoading } = useAuthedUser();
@@ -72,7 +60,6 @@ export default function Photo({ photo, isCreator }) {
   const { open } = useContext(PhotoDetailsContext);
   const { albumCode } = useParams();
   const [loaded, setLoaded] = useState(false);
-  const { enqueueSnackbar } = useSnackbar();
 
   const { mutateAsync: removePhoto } = useRemovePhoto(albumCode);
 
@@ -84,45 +71,6 @@ export default function Photo({ photo, isCreator }) {
 
   function openDetails() {
     open(photo);
-  }
-
-  async function download() {
-    try {
-      const response = await axios.get(photo.url, { responseType: "blob" });
-      const { data } = response;
-      let blobData = [data];
-      let blob = new Blob(blobData, { type: data.type });
-      let os = getMobileOperatingSystem();
-      if (os === "iOS") {
-        let reader = new FileReader();
-        reader.onload = (e) => {
-          window.location.href = reader.result;
-        };
-
-        reader.addEventListener("loadend", () => {});
-        reader.addEventListener("error", () => {});
-        reader.readAsDataURL(blob);
-      } else {
-        let blobURL = window.URL.createObjectURL(blob);
-        let tempLink = document.createElement("a");
-        tempLink.style.display = "none";
-        tempLink.href = blobURL;
-        tempLink.setAttribute("download", photo.name);
-        if (typeof tempLink.download === "undefined") {
-          tempLink.setAttribute("target", "_blank");
-        }
-
-        document.body.appendChild(tempLink);
-        tempLink.click();
-        document.body.removeChild(tempLink);
-        window.URL.revokeObjectURL(blobURL);
-      }
-    } catch (error) {
-      console.log(error);
-      enqueueSnackbar("There was an error downloading the file.", {
-        variant: "error",
-      });
-    }
   }
 
   async function remove() {
@@ -177,31 +125,25 @@ export default function Photo({ photo, isCreator }) {
             exit={{ opacity: 0, x: "-50%", y: 10 }}
             className={classes.actions}
           >
-            <IconButton
-              className={classes.btn}
+            <Button
               size="small"
               color="primary"
+              variant="contained"
               onClick={openDetails}
-            >
-              <InfoOutlinedIcon />
-            </IconButton>
-            <IconButton
               className={classes.btn}
-              size="small"
-              color="primary"
-              onClick={download}
             >
-              <GetAppIcon />
-            </IconButton>
+              Info
+            </Button>
             {canDelete && (
-              <IconButton
+              <Button
                 className={classes.btn}
                 size="small"
-                color="primary"
+                color="secondary"
+                variant="contained"
                 onClick={remove}
               >
-                <RemoveCircleOutlineIcon />
-              </IconButton>
+                Remove
+              </Button>
             )}
           </motion.div>
         )}

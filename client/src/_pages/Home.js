@@ -8,6 +8,7 @@ import {
   KeyboardDatePicker,
 } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
+import Typography from "@material-ui/core/Typography";
 // Mutations
 import useCreateAlbum from "../_mutations/useCreateAlbum";
 // Components
@@ -33,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
   },
   form: {
     boxShadow: theme.shadows[7],
-    width: "350px",
+    width: "300px",
     padding: "20px",
     borderRadius: "10px",
     zIndex: 1,
@@ -120,6 +121,8 @@ export default function Home() {
         <img src={backgroundImg} className={classes.backgroundImg} />
         <div className={classes.parent}>
           <div className={classes.form}>
+            <Typography variant="h2">Pixel Push</Typography>
+            <Typography variant="body1">Share the moments</Typography>
             <div>
               <div className={classes.input}>
                 <TextField

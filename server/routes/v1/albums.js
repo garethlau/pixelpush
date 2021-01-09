@@ -187,11 +187,14 @@ router.delete("/:albumCode/photos/:key", auth.enforce, async (req, res) => {
     // Check if this user is permitted to remove this photo
     let permitted = false;
     if (album.createdBy === ID) {
+      // The authenticated user is the creator the album and is able to delete the photo
       permitted = true;
     }
 
     const photoToDelete = album.photos.find((photo) => photo.key === key);
     if (photoToDelete.uploadedBy === ID) {
+      // The photo was uploaded by the authenticated user
+      // Is able to delete the photo
       permitted = true;
     }
 

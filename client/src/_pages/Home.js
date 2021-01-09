@@ -12,6 +12,7 @@ import DateFnsUtils from "@date-io/date-fns";
 import useCreateAlbum from "../_mutations/useCreateAlbum";
 // Components
 import Button from "../_components/Button";
+import ProfileCoin from "../_components/ProfileCoin";
 // Hooks
 import useTextInput from "../_hooks/useTextInput";
 // Assets
@@ -21,6 +22,7 @@ const useStyles = makeStyles((theme) => ({
   root: {
     width: "100vw",
     height: "100vh",
+    position: "relative",
   },
   parent: {
     height: "100%",
@@ -106,6 +108,7 @@ export default function Home() {
   return (
     <React.Fragment>
       <div className={classes.root}>
+        <ProfileCoin />
         <img src={backgroundImg} className={classes.backgroundImg} />
         <div className={classes.parent}>
           <div className={classes.form}>

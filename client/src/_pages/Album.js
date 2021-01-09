@@ -84,6 +84,7 @@ const useStyles = makeStyles((theme) => ({
   },
   mobileProfileCoin: {
     margin: "20px 0",
+    height: "45px",
   },
 }));
 

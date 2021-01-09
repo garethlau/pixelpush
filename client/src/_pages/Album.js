@@ -127,19 +127,21 @@ export default function Album() {
     }
   }, [album, loadingAlbum]);
 
-  useEffect(async () => {
-    if (uploadQueue.size() > 0) {
-      const file = uploadQueue.peek();
-      startProgress(file.key);
-      await upload(albumCode, file, {
-        onUploadProgress: ({ loaded, total }) => {
-          setProgress(file.key, loaded, total);
-        },
-      });
-      completeProgress(file.key);
-      refetchPhotos();
-      uploadQueue.dequeue();
-    }
+  useEffect(() => {
+    (async function () {
+      if (uploadQueue.size() > 0) {
+        const file = uploadQueue.peek();
+        startProgress(file.key);
+        await upload(albumCode, file, {
+          onUploadProgress: ({ loaded, total }) => {
+            setProgress(file.key, loaded, total);
+          },
+        });
+        completeProgress(file.key);
+        refetchPhotos();
+        uploadQueue.dequeue();
+      }
+    })();
   }, [uploadQueue]);
 
   async function deleteAlbum() {

@@ -15,9 +15,11 @@ const useStyles = makeStyles((theme) => ({
     position: "absolute",
     top: "30px",
     right: "30px",
+    zIndex: 1,
   },
   avatar: {
     backgroundColor: blue[300],
+    boxShadow: theme.shadows[3],
     float: "left",
     "&:hover": {
       cursor: "pointer",
@@ -66,7 +68,7 @@ export default function ProfileCoin() {
       {!user ? (
         <Button
           href={`/login?redirect=${location.pathname}`}
-          variant="outlined"
+          variant="contained"
           color="primary"
         >
           Log in
@@ -78,7 +80,7 @@ export default function ProfileCoin() {
           </Avatar>
           <Button
             color="secondary"
-            variant="outlined"
+            variant="contained"
             className={classes.logout}
             onClick={logout}
           >

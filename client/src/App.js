@@ -12,6 +12,7 @@ import { PhotoDetailsProvider } from "./_contexts/photoDetails";
 import Home from "./_pages/Home";
 import Album from "./_pages/Album";
 import Authenticate from "./_pages/Authenticate";
+import { ShareModalProvider } from "./_contexts/shareModal";
 
 const snackbarConfig = {
   maxSnack: 1,
@@ -35,7 +36,15 @@ function App() {
                 <Router>
                   <Switch>
                     <Route path="/" exact component={Home} />
-                    <Route path="/albums/:albumCode" component={Album} />
+                    {/* <Route path="/albums/:albumCode" component={Album} /> */}
+                    <Route
+                      path="/albums/:albumCode"
+                      render={(routeProps) => (
+                        <ShareModalProvider>
+                          <Album {...routeProps} />
+                        </ShareModalProvider>
+                      )}
+                    />
                     <Route
                       path="/signup"
                       render={(routeProps) => <Authenticate {...routeProps} />}

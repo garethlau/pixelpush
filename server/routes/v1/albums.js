@@ -43,6 +43,7 @@ router.post("/", auth.enforce, async (req, res) => {
     }).save();
     return res.status(200).send({ album });
   } catch (error) {
+    console.error(error);
     return res.status(500).send(error);
   }
 });
@@ -56,6 +57,7 @@ router.get("/:albumCode", async (req, res) => {
     }
     return res.status(200).send({ album });
   } catch (error) {
+    console.error(error);
     return res.status(500).send(error);
   }
 });
@@ -84,7 +86,7 @@ router.get("/:albumCode/photos", async (req, res) => {
 
     return res.status(200).send({ photos: photosWithSignedUrl });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return res.status(500).send(error);
   }
 });
@@ -131,7 +133,7 @@ router.delete("/:albumCode", auth.enforce, async (req, res) => {
 
     return res.status(200).send({ message: "Album deleted." });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return res.status(500).send(error);
   }
 });
@@ -168,6 +170,7 @@ router.put("/:albumCode/photos", auth.enforce, async (req, res) => {
 
     return res.status(200).send({ album: updatedAlbum });
   } catch (error) {
+    console.error(error);
     return res.status(500).send(error);
   }
 });
@@ -216,6 +219,7 @@ router.delete("/:albumCode/photos/:key", auth.enforce, async (req, res) => {
 
     return res.status(200).send({ album: updatedAlbum });
   } catch (error) {
+    console.error(error);
     return res.status(500).send(error);
   }
 });

@@ -63,6 +63,10 @@ export default function ShareModal({ isOpen, close }) {
         <Seperator>OR</Seperator>
         <p>Scan the QR Code</p>
         <QRCode />
+        <p>
+          Please note that anyone with the link can download any photos in the
+          album and can upload any photos to the album.
+        </p>
       </div>
     </Modal>
   );

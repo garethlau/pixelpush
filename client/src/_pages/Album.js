@@ -70,7 +70,12 @@ const useStyles = makeStyles((theme) => ({
     left: "50%",
     transform: "translate(-50%, -50%)",
   },
-  empty: {},
+  empty: {
+    textAlign: "center",
+    opacity: 0.7,
+    maxWidth: "300px",
+    margin: "auto",
+  },
   browserProfileCoin: {
     position: "absolute",
     top: "30px",

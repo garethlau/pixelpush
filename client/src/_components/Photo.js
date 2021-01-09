@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
     right: "10px",
     top: "50%",
     backgroundColor: theme.palette.common.white,
-    boxShadow: theme.shadows[10],
+    boxShadow: theme.shadows[3],
     borderRadius: "5px",
   },
   skeletonContainer: {

@@ -9,6 +9,7 @@ const axios = require("axios");
 const sharp = require("sharp");
 
 const s3 = require("../../s3");
+const { deletePhotos, deletePhoto } = require("../../s3/utils");
 const keys = require("../../config/keys");
 
 const auth = require("../../middlewares/auth");
@@ -115,19 +116,9 @@ router.delete("/:albumCode", auth.enforce, async (req, res) => {
         .send({ message: "You do not have permissions to delete this album." });
     }
 
-    const objects = album.photos
-      .map((photo) => [{ Key: photo.key }, { Key: photo.key + "-preview" }])
-      .flat();
-    if (album.photos.length > 0) {
-      // Remove photos from s3
-      const params = {
-        Bucket: keys.S3_BUCKET_NAME,
-        Delete: {
-          Quiet: false,
-          Objects: objects,
-        },
-      };
-      await s3.deleteObjects(params).promise();
+    const keys = album.photos.map((photo) => photo.key);
+    if (keys.length > 0) {
+      await deletePhotos(keys);
     }
 
     // Delete the album from mongo
@@ -167,10 +158,10 @@ router.put("/:albumCode/photos", auth.enforce, async (req, res) => {
       .jpeg({
         quality: 80,
       })
-      .resize(1200)
+      .resize(960)
       .toBuffer();
 
-    let result = await s3
+    await s3
       .putObject({
         Body: resizedBuffer,
         Bucket: keys.S3_BUCKET_NAME,
@@ -226,15 +217,7 @@ router.delete("/:albumCode/photos/:key", auth.enforce, async (req, res) => {
     }
 
     // Remove the object from S3
-
-    const params = {
-      Bucket: keys.S3_BUCKET_NAME,
-      Delete: {
-        Quiet: false,
-        Objects: [{ Key: key }, { Key: key + "-preview" }],
-      },
-    };
-    await s3.deleteObjects(params).promise();
+    await deletePhoto(key);
 
     // Remove the photo from the album
     album.photos = album.photos.filter((photo) => photo.key !== key);

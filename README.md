@@ -45,3 +45,7 @@ What the creator of the album sees:
 
 What contributors or viewers see:
 ![](/demo/viewer.jpg)
+
+### Mobile Views
+
+![](/demo/mobile-views.png)

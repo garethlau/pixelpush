@@ -1,7 +1,7 @@
 import { useContext, useMemo } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, AnimateSharedLayout, motion } from "framer-motion";
 // Contexts
 import { UploadQueueContext } from "../_contexts/uploadQueue";
 import { UploadProgressContext } from "../_contexts/uploadProgress";
@@ -69,31 +69,33 @@ export default function UploadQueue() {
             </Typography>
           </div>
           <div className={classes.cardContainer}>
-            <AnimatePresence>
-              {uploadQueue.values.map((file) => (
-                <motion.div
-                  key={file.key}
-                  className={classes.fileCard}
-                  initial={{ y: 50, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  exit={{ y: -50, opacity: 0, scaleY: 0.5 }}
-                >
-                  <Typography noWrap variant="body1">
-                    {file.name}
-                  </Typography>
-                  <Typography noWrap variant="caption">
-                    {formatFileSize(file.size)}
-                  </Typography>
-                  {isUploading(file.key) && (
-                    <LinearProgress
-                      className={classes.progress}
-                      variant="determinate"
-                      value={getProgress(file.key) * 100}
-                    />
-                  )}
-                </motion.div>
-              ))}
-            </AnimatePresence>
+            <AnimateSharedLayout>
+              <AnimatePresence>
+                {uploadQueue.values.map((file) => (
+                  <motion.div
+                    key={file.key}
+                    className={classes.fileCard}
+                    initial={{ y: 50, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    exit={{ y: -50, opacity: 0, scaleY: 0.5 }}
+                  >
+                    <Typography noWrap variant="body1">
+                      {file.name}
+                    </Typography>
+                    <Typography noWrap variant="caption">
+                      {formatFileSize(file.size)}
+                    </Typography>
+                    {isUploading(file.key) && (
+                      <LinearProgress
+                        className={classes.progress}
+                        variant="determinate"
+                        value={getProgress(file.key) * 100}
+                      />
+                    )}
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+            </AnimateSharedLayout>
           </div>
         </motion.div>
       )}

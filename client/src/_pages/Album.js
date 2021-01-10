@@ -12,7 +12,7 @@ import { v4 as uuidv4 } from "uuid";
 import Typography from "@material-ui/core/Typography";
 import Skeleton from "@material-ui/lab/Skeleton";
 import { useSnackbar } from "notistack";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, AnimateSharedLayout, motion } from "framer-motion";
 import { BrowserView, MobileView } from "react-device-detect";
 // Contexts
 import { UploadQueueContext } from "../_contexts/uploadQueue";
@@ -283,11 +283,17 @@ export default function Album() {
                 </Typography>
               </div>
             ) : (
-              <AnimatePresence>
-                {photos?.map((photo) => (
-                  <Photo photo={photo} key={photo.key} isCreator={isCreator} />
-                ))}
-              </AnimatePresence>
+              <AnimateSharedLayout>
+                <AnimatePresence>
+                  {photos?.map((photo) => (
+                    <Photo
+                      photo={photo}
+                      key={photo.key}
+                      isCreator={isCreator}
+                    />
+                  ))}
+                </AnimatePresence>
+              </AnimateSharedLayout>
             )}
           </div>
 

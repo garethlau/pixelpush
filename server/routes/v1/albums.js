@@ -153,26 +153,39 @@ router.put("/:albumCode/photos", auth.enforce, async (req, res) => {
     const dimensions = sizeOf(buffer);
     const { height, width } = dimensions;
 
-    // Resize the image for preview
-    const resizedBuffer = await sharp(buffer)
-      .jpeg({
-        quality: 80,
-      })
-      .resize(480)
-      .toBuffer();
+    let noPreview = true;
+    if (size > 50 * 1024) {
+      noPreview = false;
+      // Resize the image for preview
+      const resizedBuffer = await sharp(buffer)
+        .jpeg({
+          quality: 80,
+        })
+        .resize(480)
+        .toBuffer();
 
-    await s3
-      .putObject({
-        Body: resizedBuffer,
-        Bucket: keys.S3_BUCKET_NAME,
-        Key: key + "-preview",
-      })
-      .promise();
+      await s3
+        .putObject({
+          Body: resizedBuffer,
+          Bucket: keys.S3_BUCKET_NAME,
+          Key: key + "-preview",
+        })
+        .promise();
+    }
 
     const album = await Album.findOne({ code: albumCode }).exec();
     const photos = album.photos;
 
-    let newPhoto = { key, width, height, uploadedBy: ID, size, type, name };
+    let newPhoto = {
+      key,
+      width,
+      height,
+      uploadedBy: ID,
+      size,
+      type,
+      name,
+      noPreview,
+    };
 
     album.photos = [...photos, newPhoto];
     const updatedAlbum = await album.save();

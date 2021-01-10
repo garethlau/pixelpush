@@ -196,6 +196,7 @@ export default function Photo({ photo, isCreator }) {
         className={previewLoaded ? classes.img : classes.imgLoading}
         src={photo.previewUrl}
         alt=""
+        onClick={() => !useSrc && setUseSrc(true)}
         onLoad={() => setPreviewLoaded(true)}
       />
     ),
@@ -220,7 +221,6 @@ export default function Photo({ photo, isCreator }) {
       className={classes.root}
       onMouseEnter={() => setShowActions(true)}
       onMouseLeave={() => setShowActions(false)}
-      onClick={() => !useSrc && setUseSrc(true)}
     >
       <AnimatePresence>
         {!previewLoaded && (

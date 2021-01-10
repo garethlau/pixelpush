@@ -33,6 +33,8 @@ const useStyles = makeStyles((theme) => ({
     position: "absolute",
     left: "50%",
     bottom: "40px",
+    width: "250px",
+    textAlign: "center",
   },
   skeletonContainer: {
     paddingTop: "56.25%",

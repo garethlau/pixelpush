@@ -195,6 +195,11 @@ export default function Album() {
 
         return file;
       });
+      if (acceptedFiles.length < droppedFiles.length) {
+        enqueueSnackbar("Did you upload an invalid file type?", {
+          variant: "default",
+        });
+      }
       uploadQueue.enqueueMany(acceptedFiles);
     },
     [uploadQueue]

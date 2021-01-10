@@ -30,36 +30,35 @@ function App() {
       <CssBaseline />
       <SnackbarProvider {...snackbarConfig}>
         <QueryClientProvider client={queryClient}>
-          <PhotoDetailsProvider>
-            <UploadQueueProvider>
-              <UploadProgressProvider>
-                <Router>
-                  <Switch>
-                    <Route path="/" exact component={Home} />
-                    {/* <Route path="/albums/:albumCode" component={Album} /> */}
-                    <Route
-                      path="/albums/:albumCode"
-                      render={(routeProps) => (
+          <Router>
+            <Switch>
+              <Route path="/" exact component={Home} />
+              <Route
+                path="/albums/:albumCode"
+                render={(routeProps) => (
+                  <PhotoDetailsProvider>
+                    <UploadQueueProvider>
+                      <UploadProgressProvider>
                         <ShareModalProvider>
                           <Album {...routeProps} />
                         </ShareModalProvider>
-                      )}
-                    />
-                    <Route
-                      path="/signup"
-                      render={(routeProps) => <Authenticate {...routeProps} />}
-                    />
-                    <Route
-                      path="/login"
-                      render={(routeProps) => (
-                        <Authenticate {...routeProps} isLogin />
-                      )}
-                    />
-                  </Switch>
-                </Router>
-              </UploadProgressProvider>
-            </UploadQueueProvider>
-          </PhotoDetailsProvider>
+                      </UploadProgressProvider>
+                    </UploadQueueProvider>
+                  </PhotoDetailsProvider>
+                )}
+              />
+              <Route
+                path="/signup"
+                render={(routeProps) => <Authenticate {...routeProps} />}
+              />
+              <Route
+                path="/login"
+                render={(routeProps) => (
+                  <Authenticate {...routeProps} isLogin />
+                )}
+              />
+            </Switch>
+          </Router>
         </QueryClientProvider>
       </SnackbarProvider>
     </ThemeProvider>

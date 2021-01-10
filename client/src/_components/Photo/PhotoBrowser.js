@@ -222,23 +222,15 @@ export default function Photo({ photo, isCreator }) {
       onMouseEnter={() => setShowActions(true)}
       onMouseLeave={() => setShowActions(false)}
     >
-      <AnimatePresence>
-        {!previewLoaded && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className={classes.skeletonContainer}
-            key={"loader"}
-          >
-            <Skeleton
-              variant="rect"
-              animation="wave"
-              className={classes.skeleton}
-            />
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {!previewLoaded && (
+        <div className={classes.skeletonContainer}>
+          <Skeleton
+            variant="rect"
+            animation="wave"
+            className={classes.skeleton}
+          />
+        </div>
+      )}
       {!srcLoaded && previewImg}
       {useSrc && fullImg}
       <AnimatePresence>

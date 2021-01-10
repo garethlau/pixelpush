@@ -79,7 +79,7 @@ const useStyles = makeStyles((theme) => ({
   browserProfileCoin: {
     position: "absolute",
     top: "30px",
-    right: "30px",
+    right: "0px",
     zIndex: 1,
   },
   mobileProfileCoin: {

@@ -97,6 +97,7 @@ export default function Photo({ photo, isCreator }) {
     }
   }
   const status = useMemo(() => {
+    if (!previewLoaded) return null;
     if (!useSrc) {
       return (
         <Tooltip
@@ -120,17 +121,13 @@ export default function Photo({ photo, isCreator }) {
     } else {
       return null;
     }
-  }, [useSrc, srcLoaded]);
+  }, [useSrc, srcLoaded, previewLoaded]);
 
   const previewImg = useMemo(
     () => (
-      <motion.img
-        key={"image-preview"}
+      <img
         className={previewLoaded ? classes.img : classes.imgLoading}
         src={photo.previewUrl}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
         alt=""
         onLoad={() => setPreviewLoaded(true)}
       />
@@ -140,13 +137,9 @@ export default function Photo({ photo, isCreator }) {
 
   const fullImg = useMemo(
     () => (
-      <motion.img
-        key={"image-full"}
+      <img
         className={srcLoaded ? classes.img : classes.imgLoading}
         src={photo.url}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
         alt=""
         onLoad={() => setSrcLoaded(true)}
       />
@@ -177,10 +170,9 @@ export default function Photo({ photo, isCreator }) {
             />
           </motion.div>
         )}
-
-        {!srcLoaded && previewImg}
-        {useSrc && fullImg}
       </AnimatePresence>
+      {!srcLoaded && previewImg}
+      {useSrc && fullImg}
 
       <AnimatePresence>
         <div className={classes.status}>{status}</div>

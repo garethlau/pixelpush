@@ -61,6 +61,7 @@ const useStyles = makeStyles((theme) => ({
     left: "10px",
     padding: "5px",
     backdropFilter: "blur(10px)",
+    borderRadius: "5px",
     textAlign: "center",
     "& p": {
       color: "white",

@@ -6,6 +6,7 @@ const crypto = require("crypto");
 const Album = mongoose.model("Album");
 const sizeOf = require("image-size");
 const axios = require("axios");
+const sharp = require("sharp");
 
 const s3 = require("../../s3");
 const keys = require("../../config/keys");
@@ -75,12 +76,17 @@ router.get("/:albumCode/photos", async (req, res) => {
     }
 
     const photosWithSignedUrl = photos.map((photo) => {
-      const params = {
+      const previewUrl = s3.getSignedUrl("getObject", {
+        Key: photo.key + "-preview",
+        Bucket: keys.S3_BUCKET_NAME,
+      });
+
+      const url = s3.getSignedUrl("getObject", {
         Key: photo.key,
         Bucket: keys.S3_BUCKET_NAME,
-      };
-      const url = s3.getSignedUrl("getObject", params);
+      });
       photo.url = url;
+      photo.previewUrl = previewUrl;
       return photo;
     });
 
@@ -109,17 +115,16 @@ router.delete("/:albumCode", auth.enforce, async (req, res) => {
         .send({ message: "You do not have permissions to delete this album." });
     }
 
+    const objects = album.photos
+      .map((photo) => [{ Key: photo.key }, { Key: photo.key + "-preview" }])
+      .flat();
     if (album.photos.length > 0) {
       // Remove photos from s3
       const params = {
         Bucket: keys.S3_BUCKET_NAME,
         Delete: {
           Quiet: false,
-          Objects: album.photos.map((photo) => {
-            return {
-              Key: photo.key,
-            };
-          }),
+          Objects: objects,
         },
       };
       await s3.deleteObjects(params).promise();
@@ -149,13 +154,29 @@ router.put("/:albumCode/photos", auth.enforce, async (req, res) => {
   };
   const signedUrl = s3.getSignedUrl("getObject", params);
   try {
-    // Determine the image dimensions
     const response = await axios.get(signedUrl, {
       responseType: "arraybuffer",
     });
     const buffer = Buffer.from(response.data, "binary");
+    // Determine the image dimensions
     const dimensions = sizeOf(buffer);
     const { height, width } = dimensions;
+
+    // Resize the image for preview
+    const resizedBuffer = await sharp(buffer)
+      .jpeg({
+        quality: 80,
+      })
+      .resize(1200)
+      .toBuffer();
+
+    let result = await s3
+      .putObject({
+        Body: resizedBuffer,
+        Bucket: keys.S3_BUCKET_NAME,
+        Key: key + "-preview",
+      })
+      .promise();
 
     const album = await Album.findOne({ code: albumCode }).exec();
     const photos = album.photos;
@@ -205,11 +226,15 @@ router.delete("/:albumCode/photos/:key", auth.enforce, async (req, res) => {
     }
 
     // Remove the object from S3
+
     const params = {
       Bucket: keys.S3_BUCKET_NAME,
-      Key: key,
+      Delete: {
+        Quiet: false,
+        Objects: [{ Key: key }, { Key: key + "-preview" }],
+      },
     };
-    await s3.deleteObject(params).promise();
+    await s3.deleteObjects(params).promise();
 
     // Remove the photo from the album
     album.photos = album.photos.filter((photo) => photo.key !== key);

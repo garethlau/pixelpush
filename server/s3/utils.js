@@ -12,9 +12,9 @@ async function deletePhoto(key) {
   const result = await s3.deleteObjects(params).promise();
   return result;
 }
-async function deletePhotos(keys) {
+async function deletePhotos(k) {
   let objects = [];
-  keys.forEach((key) => {
+  k.forEach((key) => {
     objects.push({ Key: key });
     objects.push({ Key: key + "-preview" });
   });
@@ -22,7 +22,7 @@ async function deletePhotos(keys) {
     Bucket: keys.S3_BUCKET_NAME,
     Delete: {
       Quiet: false,
-      Objects: [{ Key: key }, { Key: key + "-preview" }],
+      Objects: objects,
     },
   };
 

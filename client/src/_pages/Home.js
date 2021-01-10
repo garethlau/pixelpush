@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: theme.shadows[7],
     width: "300px",
     padding: "20px",
-    borderRadius: "10px",
+    borderRadius: "5px",
     zIndex: 1,
     backgroundColor: "white",
   },

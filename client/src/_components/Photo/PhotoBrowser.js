@@ -9,6 +9,7 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import Skeleton from "@material-ui/lab/Skeleton";
 import { useSnackbar } from "notistack";
+import Tooltip from "@material-ui/core/Tooltip";
 // Contexts
 import { PhotoDetailsContext } from "../../_contexts/photoDetails";
 // Queries
@@ -19,6 +20,9 @@ import useRemovePhoto from "../../_mutations/useRemovePhoto";
 const useStyles = makeStyles((theme) => ({
   root: {
     position: "relative",
+    "&:hover": {
+      cursor: "pointer",
+    },
   },
   img: {
     width: "100%",
@@ -28,6 +32,7 @@ const useStyles = makeStyles((theme) => ({
   },
   imgLoading: {
     height: 0,
+    margin: "20px 0",
   },
   actions: {
     position: "absolute",
@@ -44,6 +49,7 @@ const useStyles = makeStyles((theme) => ({
     overflow: "hidden",
     boxShadow: theme.shadows[5],
     borderRadius: "3px",
+    margin: "20px 0",
   },
   skeleton: {
     height: "100%",
@@ -54,6 +60,18 @@ const useStyles = makeStyles((theme) => ({
   },
   btn: {
     margin: "2.5px",
+  },
+  status: {
+    position: "absolute",
+    top: "30px",
+    left: "10px",
+    padding: "5px",
+    backdropFilter: "blur(10px)",
+    textAlign: "center",
+    "& p": {
+      color: "white",
+      margin: 0,
+    },
   },
 }));
 
@@ -71,8 +89,10 @@ export default function Photo({ photo, isCreator }) {
   const [showActions, setShowActions] = useState(false);
   const { open } = useContext(PhotoDetailsContext);
   const { albumCode } = useParams();
-  const [loaded, setLoaded] = useState(false);
+  const [previewLoaded, setPreviewLoaded] = useState(false);
+  const [srcLoaded, setSrcLoaded] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
+  const [useSrc, setUseSrc] = useState(false);
 
   const { mutateAsync: removePhoto } = useRemovePhoto(albumCode);
 
@@ -133,15 +153,74 @@ export default function Photo({ photo, isCreator }) {
     }
   }
 
+  const status = useMemo(() => {
+    if (!useSrc) {
+      return (
+        <Tooltip
+          arrow
+          title="Click the image to load the full resolution version."
+          placement="right"
+        >
+          <p>preview</p>
+        </Tooltip>
+      );
+    } else if (useSrc && !srcLoaded) {
+      return (
+        <Tooltip
+          arrow
+          title="The full resolution image is loading."
+          placement="right"
+        >
+          <p>loading</p>
+        </Tooltip>
+      );
+    } else {
+      return null;
+    }
+  }, [useSrc, srcLoaded]);
+
+  const previewImg = useMemo(
+    () => (
+      <motion.img
+        key={"image-preview"}
+        className={previewLoaded ? classes.img : classes.imgLoading}
+        src={photo.previewUrl}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        alt=""
+        onLoad={() => setPreviewLoaded(true)}
+      />
+    ),
+    [previewLoaded]
+  );
+
+  const fullImg = useMemo(
+    () => (
+      <motion.img
+        key={"image-full"}
+        className={srcLoaded ? classes.img : classes.imgLoading}
+        src={photo.url}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        alt=""
+        onLoad={() => setSrcLoaded(true)}
+      />
+    ),
+    [srcLoaded]
+  );
+
   return (
     <motion.div
       exit={{ opacity: 0, scale: 0.7 }}
       className={classes.root}
       onMouseEnter={() => setShowActions(true)}
       onMouseLeave={() => setShowActions(false)}
+      onClick={() => !useSrc && setUseSrc(true)}
     >
       <AnimatePresence>
-        {!loaded && (
+        {!previewLoaded && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -156,20 +235,12 @@ export default function Photo({ photo, isCreator }) {
             />
           </motion.div>
         )}
-
-        <motion.img
-          key={"image"}
-          className={loaded ? classes.img : classes.imgLoading}
-          src={photo.previewUrl}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          alt=""
-          onLoad={() => setLoaded(true)}
-        />
+        {!srcLoaded && previewImg}
+        {useSrc && fullImg}
       </AnimatePresence>
       <AnimatePresence>
-        {loaded && showActions && (
+        <div className={classes.status}>{status}</div>
+        {previewLoaded && showActions && (
           <motion.div
             initial={{ opacity: 0, x: 10, y: "-50%" }}
             animate={{ opacity: 1, x: 0, y: "-50%" }}

@@ -158,7 +158,7 @@ router.put("/:albumCode/photos", auth.enforce, async (req, res) => {
       .jpeg({
         quality: 80,
       })
-      .resize(960)
+      .resize(480)
       .toBuffer();
 
     await s3

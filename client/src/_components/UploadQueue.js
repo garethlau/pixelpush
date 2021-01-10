@@ -21,6 +21,7 @@ const useStyles = makeStyles((theme) => ({
     backdropFilter: "blur(10px) brightness(0.7)",
     boxShadow: theme.shadows[7],
     zIndex: 5,
+    borderRadius: "5px 5px 0 0",
   },
   header: {
     position: "relative",
@@ -28,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.primary.main,
     padding: "10px",
     color: theme.palette.common.white,
-    borderRadius: "5px 5px 0 0",
+    borderRadius: "inherit",
     height: "50px",
   },
   cardContainer: {

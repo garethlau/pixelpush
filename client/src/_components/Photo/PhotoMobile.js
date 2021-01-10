@@ -108,7 +108,7 @@ export default function Photo({ photo, isCreator }) {
         <motion.img
           key={"image"}
           className={loaded ? classes.img : classes.imgLoading}
-          src={photo.url}
+          src={photo.previewUrl}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}

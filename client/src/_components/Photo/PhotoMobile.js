@@ -1,4 +1,4 @@
-import { useState, useContext, useMemo, useRef } from "react";
+import { useState, useContext, useMemo, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import RemoveCircleOutlineIcon from "@material-ui/icons/RemoveCircleOutline";
 import IconButton from "@material-ui/core/IconButton";
@@ -146,6 +146,13 @@ export default function Photo({ photo, isCreator }) {
     ),
     [srcLoaded]
   );
+
+  useEffect(() => {
+    if (!!photo.noPreview) {
+      setUseSrc(true);
+      setPreviewLoaded(true);
+    }
+  }, [photo]);
 
   return (
     <motion.div

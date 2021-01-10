@@ -1,4 +1,4 @@
-import { useState, useContext, useMemo } from "react";
+import { useState, useContext, useMemo, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import RemoveCircleOutlineIcon from "@material-ui/icons/RemoveCircleOutline";
 import IconButton from "@material-ui/core/IconButton";
@@ -181,6 +181,13 @@ export default function Photo({ photo, isCreator }) {
       return null;
     }
   }, [useSrc, srcLoaded, previewLoaded]);
+
+  useEffect(() => {
+    if (!!photo.noPreview) {
+      setUseSrc(true);
+      setPreviewLoaded(true);
+    }
+  }, [photo]);
 
   const previewImg = useMemo(
     () => (
